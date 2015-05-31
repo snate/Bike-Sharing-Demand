@@ -1,0 +1,15 @@
+---
+title: "Linear Model - Bikes"
+output: html_document
+---
+
+Si intende approssimare la richiesta di bici tramite un semplice modello
+lineare.
+
+Per far questo, si vuole procedere con un approccio passo-passo in avanti,
+aggiungendo le variabili più significative fintanto che queste, se aggiunte
+al modello lineare, forniscono valore utile.
+
+Step 1 - Trovare la variabile migliore
+Si imposta un ciclo al fine di trovare la variabile con p-value minore.
+Nel nostro caso, questa risulta temp.
