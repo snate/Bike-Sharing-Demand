@@ -41,3 +41,6 @@ test$weather[test$weather == 4] = 0
 train$weather[train$weather == 2] = 0
 train$weather[train$weather == 3] = 0
 train$weather[train$weather == 4] = 0
+
+# COSTANTS
+FWD_SW_THRESHOLD = 0.05
