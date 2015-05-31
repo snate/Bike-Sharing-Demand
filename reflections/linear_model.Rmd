@@ -10,6 +10,31 @@ Per far questo, si vuole procedere con un approccio passo-passo in avanti,
 aggiungendo le variabili più significative fintanto che queste, se aggiunte
 al modello lineare, forniscono valore utile.
 
-Step 1 - Trovare la variabile migliore
+1) Trovare la variabile migliore
 Si imposta un ciclo al fine di trovare la variabile con p-value minore.
-Nel nostro caso, questa risulta temp.
+
+Nel nostro caso, questa risulta temp e questo risultato può sembrare sensato.
+
+2) Aggiunta di variabili al modello
+Si procede aggiungendo una variabile al modello solamente se questa fornisce
+un contributo significativo ad esso.
+Tale effetto è controllato tramite delle tabelle AnOVa (Analysis Of Variance),
+in cui è ben visibile il contributo fornito da una variabile aggiunta al modello.
+
+Dopo l'esecuzione dello script, vengono aggiunte 5 variabili.
+A guardarle meglio, queste sono:
+* humidity: questo valore pare sensato, ci si aspetta infatti che al crescere
+  dell'umidità la gente sia meno disposta ad utilizzare il servizio di Bike
+  Sharing
+* season: i valori ottenuti sorprendono sensibilmente, poichè ci si
+  aspetterebbe che con le stagioni più calde si utilizzi di più il servizio di
+  Bike Sharing
+* weather.decent: questo valore pare sensato, tuttavia è l'unico della
+  variabile qualitativa a comparire; ci si chiede se sia dovuto al caso o se
+  effettivamente è solamente il fatto che ci sia tempo medio-buono a contribuire
+  alla richiesta per il Bike Sharing
+* windspeed: questo valore pare sensato, poichè ci si aspetta che al crescere
+  del vento sia più piacevole andare in bici per la maggioranza delle persone
+* atemp: questo valore pare sensato, poichè ci si aspetta che al crescere
+  della temperatura percepita cresca anche il bisogno di andare in bici (per
+  rinfrescarsi)
