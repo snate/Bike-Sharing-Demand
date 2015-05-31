@@ -4,10 +4,6 @@ test$datetime = as.Date(test$datetime)
 train = read.csv(file="data/train.csv")
 train$datetime = as.Date(train$datetime)
 
-# separate answers in another table
-train.answer = train[,10:12]
-train = train[,-c(10:12)]
-
 #SEASONS#
 # summer
 train$season.summer = rep(0,length(train$season))
