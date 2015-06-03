@@ -1,10 +1,7 @@
-columns = colnames(test)
-columns = columns[2:length(columns)]
-
 indexes = sample(1:NROW(train),length(train$count)-10)
 
 Aprimo = train[indexes,columns]
-y = train[indexes,"count"]
+y = log(train[indexes,"count"])
 X = model.matrix(~., data=Aprimo)
 
 V = diag(1,ncol(X),ncol(X))
@@ -20,16 +17,16 @@ for(i in 1 : NROW(X)) {
   beta.storia[i,] = beta
 }
 
+beta = matrix(beta)
+print("Hello")
+rownames(beta) = c("(Intercept)",columns)
+
 X11()
 par(mfrow = c(3,1))
 plot(beta.storia[,1], type="l")
 plot(beta.storia[,2], type="l")
 plot(beta.storia[,3], type="l")
 
-rownames(beta) = colnames(test)
-rownames(beta)[1] = "(Intercept)"
-
-rm(columns)
 rm(Aprimo)
 rm(H)
 rm(V)
