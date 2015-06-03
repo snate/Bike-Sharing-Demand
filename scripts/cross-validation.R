@@ -1,3 +1,4 @@
+library(boot)
 estimates = matrix(NA, nrow = MAX_P_DEGREE)
 colT = colnames(test)
 colD = colnames(train)
