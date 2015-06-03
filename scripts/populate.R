@@ -49,3 +49,4 @@ train$weather[train$weather == 4] = 0
 # COSTANTS
 FWD_SW_THRESHOLD = 0.05
 MAX_P_DEGREE = 30
+columns = colnames(test)

@@ -1,4 +1,3 @@
-columns = colnames(test)
 r2 = rep(0,length(columns)); fstatistic = rep(0,length(columns))
 
 for(i in 1:length(columns)) {
@@ -25,7 +24,6 @@ print(already_present)
 
 #clean
 rm(name)
-rm(columns)
 rm(i)
 rm(best)
 rm(r2)
