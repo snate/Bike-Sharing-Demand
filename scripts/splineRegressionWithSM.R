@@ -25,7 +25,6 @@ plot((interv)/divisions,val)
 
 val = val[1:(length(val)-1)]
 i = which(val == min(val))
-print(i)
 optimal = interv[i]/divisions
 
 rm(divisions)
