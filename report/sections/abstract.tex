@@ -25,3 +25,78 @@ Questa possibilità di ottenere dati in un modo molto semplice ha spinto gli
 stessi ricercatori ad analizzare la richiesta del servizio di \emph{Bike
 sharing}, così da poter prevedere le possibili quantità di dati disponibili.
 
+\subsection{Dati utilizzati}
+
+I dati utilizzati provengono da un contest su
+Kaggle\footnote{\texttt{https://www.kaggle.com/c/bike-sharing-demand}},
+che a sua volta li ha recuperati dal repository del corso di
+\emph{Machine Learning} dell'\textbf{University of California, Irvine}.
+
+Sono disponibili due set, uno per l'addestramento (che chiameremo anche
+\emph{training set}) e uno (il \emph{test set}) su cui fare previsioni
+utilizzando il modello ``migliore" ottenuto grazie all'analisi del training
+set.
+
+Tuttavia, il test set non verrà utilizzato poichè esso non contiene i valori
+``veri" delle variabili risposta e da qui in poi l'unico dataset a cui ci
+riferiremo sarà il \textbf{training set}.
+
+Il dataset fornito presenta le seguenti variabili:
+
+\begin{itemize}
+\item \textbf{Variabili esplicative}:
+  \begin{itemize}
+  \item \texttt{datetime}: variabile che presenta valori del tipo ``YYYY-MM-AA
+    HH:MM:SS", ovvero la data in formato americano seguita dall'orario
+    giornaliero
+
+  \item \texttt{season}: variabile qualitativa che assume i seguenti valori:
+    \begin{itemize}
+    \item \textbf{1}: primavera
+    \item \textbf{2}: estate
+    \item \textbf{3}: autunno
+    \item \textbf{4}: inverno
+    \end{itemize}
+
+  \item \texttt{holiday}: variabile qualitativa che assume i seguenti valori:
+    \begin{itemize}
+    \item \textbf{0}: giorno non festivo
+    \item \textbf{1}: giorno festivo
+    \end{itemize}
+
+  \item \texttt{working day}: variabile qualitativa che assume i seguenti
+    valori:
+    \begin{itemize}
+    \item \textbf{0}: giorno non feriale
+    \item \textbf{1}: giorno feriale
+    \end{itemize}
+
+  \item \texttt{weather}: variabile qualitativa che assume i seguenti
+    valori:
+    \begin{itemize}
+    \item \textbf{1}: terso, con poche nuvole o parzialmente nuvoloso
+    \item \textbf{2}: nebbia con possibili nuvole
+    \item \textbf{3}: pioggia
+    \item \textbf{4}: temporale, neve o grandine
+    \end{itemize}
+
+  \item \texttt{temp}: temperatura reale in gradi Celsius
+
+  \item \texttt{atemp}: temperatura percepita in gradi Celsius
+
+  \item \texttt{humidity}: umidità relativa (in percentuale)
+
+  \item \texttt{windspeed}: velocità del vento
+
+  \end{itemize}
+\item \textbf{Variabili risposta}:
+    \begin{itemize}
+
+  \item \texttt{casual}:  biciclette noleggiate da utenti non registrati
+
+  \item \texttt{registered}: biciclette noleggiate da utenti registrati
+
+  \item \texttt{count}: totale delle biciclette noleggiate
+
+    \end{itemize}
+\end{itemize}
