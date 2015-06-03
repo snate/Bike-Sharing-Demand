@@ -1,8 +1,12 @@
 # read tables
 test = read.csv(file="data/test.csv")
-test$datetime = as.Date(test$datetime)
+test$datetime = as.POSIXct(test$datetime)
+test$datetime = strptime(test$datetime, "%Y-%m-%d %H:%M:%S")
+test$datetime <- as.numeric(format(test$datetime, "%H"))
 train = read.csv(file="data/train.csv")
-train$datetime = as.Date(train$datetime)
+train$datetime = as.POSIXct(train$datetime)
+train$datetime = strptime(train$datetime, "%Y-%m-%d %H:%M:%S")
+train$datetime <- as.numeric(format(train$datetime, "%H"))
 
 #SEASONS#
 # summer
