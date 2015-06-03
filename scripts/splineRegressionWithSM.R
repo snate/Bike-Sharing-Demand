@@ -1,13 +1,13 @@
 library(sm)
-x = train$temp
+x = train$datetime
 y = train$count
-#interv = 50:300
+#interv = 600:900
 #divisions= 100
-#interv = 140:180
+#interv = 650:700
 #divisions= 100
-#interv = 1600:1700
+#interv = 6800:7000
 #divisions= 1000
-interv = 165000:165500
+interv = 690800:691000
 divisions= 100000
 
 #possiamo dire che 1,652 è il migliore valore per h
@@ -17,7 +17,7 @@ plot(x,y,col=3,pch=3)
 val = matrix(NA, length(interv),1)
 for (i in interv) {
   inc = i / divisions
-  sm1 = sm.regression(x,y,h=inc,add=TRUE,ngrid=120)
+  sm1 = sm.regression(x,y,h=inc,add=TRUE,ngrid=120,col=2)
   val[i-min(interv)] = sum((y[1:120]-sm1$estimate)^2)
 }
 
