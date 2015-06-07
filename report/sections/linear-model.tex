@@ -201,3 +201,87 @@ quantili osservati molto più vicina a quella di una normale.
   \caption{QQPlot per il modello lineare migliorato con
   \texttt{train\$datetime}}\label{fig:simpl-lm-log-qqplot}
 \end{figure}
+
+\subsection{Modello lineare con \emph{forward stepwise selection}}
+Il modello di prima ha portato a discreti risultati, se non per il fatto che
+utilizzava solamente una delle variabili esplicative.
+
+Un approccio naïf potrebbe essere quello di inserire nel calcolo del modello
+lineare tutte le variabili esplicative presenti nel set \texttt{train} e di
+calcolare il modello lineare con il comando fornito da R.
+
+Come è possibile vedere, ci sono alcune variabili che non sono significative e
+altre che invece è sensato che appartengano al nostro modello:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.55\columnwidth]{images/lm-with-all-vars.eps}
+  \caption{Modello lineare calcolato su tutte le variabili in modo
+    non-ordinato}\label{fig:simpl-lm-log-qqplot}
+\end{figure}
+
+Tuttavia, anzichè provare manualmente qualsiasi combinazione di variabili
+affinchè non si trovi il modello lineare migliore, si decide di automatizzare
+il tutto con un paio di script:
+
+\begin{itemize}
+\item \texttt{linearModel.R} (sez. \ref{sec:script-linear-model}): questo
+  script in pratica realizza quanto fatto nella prima parte dell'analisi
+  tramite un modello lineare.
+  \begin{enumerate}
+  \item Dato il modello $ w = \beta{}_0 + \beta{}_1 \cdot{} x + \epsilon{} $,
+  viene cercata la variabile esplicativa più significativa, confrontando la
+  statistica F delle variabili \texttt{train\$[columns]} (ovvero le variabili
+  esplicative);
+  \item Nel frattempo, vengono stampate a video le variabili esplicative, il
+  coefficiente di determinazione e la statistica F ottenuti usando questi come
+  ``x'' per il modello;
+  \item A questo punto, viene trovata la variabile più significativa, tale
+  risultato viene stampato a video e questa viene usata per calcolare il
+  miglior modello lineare con una variabile esplicativa;
+  \item Il nome di questa variabile viene salvato in un array chiamato
+  \texttt{already\_present} e viene invocato il secondo script.
+  \item Alla fine dello script, il workspace viene pulito, lasciando solamente
+  le variabili \texttt{train.lm} (il modello ricercato) e \texttt{train.lm2}
+  (il modello con tutte le variabili esplicative oppure con una variabile non
+  significativa presente oltre a quelle presenti in \texttt{train.lm}).
+  \end{enumerate}
+\item \texttt{linear\_model\_forward\_steps.R} (sez.
+  \ref{sec:script-linear-model-fwd-steps}): questo script serve per iterare
+  lungo le variabili esplicative al fine di inserire in modo incrementale le
+  variabili più significative per il nostro modello.
+  \begin{enumerate}
+  \item All'inizio dello script, \texttt{train.lm} è il modello lineare con n
+    variabili esplicative, dove n è il numero di volte che è stato invocato;
+  \item Per ognuna delle variabili esplicative, viene eseguito un insieme di
+    istruzioni. Se la variabile è già presente nel modello (e quindi in
+    \texttt{already\_present}), viene saltata;
+  \item Si procede calcolando il modello lineare aggiungendo alle variabili
+    già presenti quella coinvolta nell'iterazione corrente;
+  \item Viene eseguita l'ANalysis Of VAriance (\textbf{ANOVA}) sul nuovo
+    modello;
+  \item Tramite queste iterazioni, si trova la variabile più significativa da
+    aggiungere al modello lineare presente all'inizio dello script;
+  \item Tale variabile viene inserita solamente se contribuisce in modo
+      significativo a migliorare il modello; per far questo, si confronta il
+      suo p-value con una soglia stabilita a priori (nel nostro caso 5\%),
+      impostata con lo script di popolamento (sez. \ref{sec:script-populate})
+      nella costante \texttt{FWD\_SW\_THRESHOLD};
+    \item Se la variabile è stata inserita, viene ricalcolato \texttt{train.lm}
+      aggiungendo questa variabile, vengono stampate le variabili presenti nel
+      modello e viene invocato ricorsivamente questo script;
+    \item Quando non vi sono più variabili da aggiungere, il workspace viene
+      pulito (facendo attenzione a non ripetere rimozioni su oggetti già
+      cancellati) e in \texttt{train.lm} è presente il modello ricercato.
+  \end{enumerate}
+\end{itemize}
+
+Di seguito vengono riportati i dati del modello lineare ottenuto tramite gli
+script sopra descritti:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.55\columnwidth]{images/lm-after-fwd-steps.eps}
+  \caption{Modello lineare calcolato tramite forward-stepwise selection}
+    \label{fig:simpl-lm-log-qqplot}
+\end{figure}
