@@ -353,3 +353,15 @@ di osservazioni sufficientemente elevate.
   \caption{Stabilità asintotica del filtro ricorsivo}
     \label{fig:kalman-asymptotic}
 \end{figure}
+
+Si può notare come $ \beta{} $ contenga in realtà tutte le variabili e non solo
+quelle più significative, stando a quanto trovato nella sezione
+\ref{sec:mod-lin-fwd-sw}. Ciò è dovuto al fatto che non è strettamente
+necessario seguire un ordine preciso per queste due fasi di analisi, tuttavia
+come possibile sviluppo applicativo, se sorgesse la necessità, sarebbe
+possibile combinare i due in modo tale che eseguendo \emph{forward-stepwise
+selection} su una parte sufficientemente grande dei dati si riesca ad
+individuare le variabili che sono significative e quelle che non lo sono, per
+poi lasciare che il filtro ricorsivo gestisca lo stream di dati in input
+calcolando il modello solamente per le variabili esplicative trovate nella
+prima fase.
