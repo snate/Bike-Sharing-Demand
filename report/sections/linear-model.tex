@@ -6,7 +6,7 @@ Prima di iniziare a parlare del modello adottato per prevedere la richiesta di
 \emph{Bike sharing}, è opportuno chiarire come verranno gestite le variabili
 coinvolte durante l'analisi dei dati.
 
-\subsubsection{Variabili esplicative}
+\subsubsection{Variabili esplicative}\label{sec:modlin-work-espl}
 Per quanto riguarda le variabili esplicative, \texttt{holiday},
 \texttt{working day}, \texttt{weather}, \texttt{temp}, \texttt{atemp},
 \texttt{humidity}, \texttt{windspeed} non verranno trasformate in alcun modo.
@@ -85,3 +85,59 @@ Per le variabili risposta, è stato scelto di considerare solo
 \texttt{train\$count}, poichè lo studio dei modelli per le variabili
 \texttt{train\$registered} e \texttt{train\$casual} è del tutto analogo a
 quello della variabile che insieme compongono.
+
+\subsection{Modello lineare}
+Dopo aver impostato correttamente il workspace, si può procedere calcolando il
+modello lineare semplice $ y = \beta{}_0 + \beta{}_1 \cdot{} x + \epsilon{} $
+per tutte le variabili, dove y è train\$count e x una delle variabili
+esplicative.
+Inizialmente questa operazione viene ripetuta con il comando \texttt{train.lm
+= lm(y $ \sim{} $ x)} per tutte le variabili esplicative, ottenendo il
+risultato migliore per x = train\$datetime.
+
+Questo risultato ci può dare garanzie sulla buona intuizione riguardo il
+formato scelto per la variabile \texttt{datetime}, spiegato nella sezione
+\ref{sec:modlin-work-espl}, ovvero che l'ora è uno dei fattori che incidono
+molto sulla richiesta del servizio di \emph{Bike sharing}.
+
+Tale considerazione può essere compresa guardando i valori dei residui visibili
+grazie alla visione d'insieme del modello lineare fornita dal comando
+\texttt{summary()}.
+
+\begin{figure}[H]\label{fig:simplest-linear-model}
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/simplest-linear-model.eps}
+  \caption{Modello lineare con \texttt{train\$datetime}}
+\end{figure}
+
+I dati relativi al modello lineare appena individuato potrebbero ingenuamente
+suggerire che la stima individuata per il coefficiente $\beta{}_1$ sia buona,
+visto un valore molto elevato della statistica F e, di conseguenza, un p-value
+prossimo a 0.
+
+Tuttavia, richiedendo i grafici relativi al modello lineare, è ben facile
+intuire che il modello lineare calcolato non è affatto soddisfacente, poichè è
+evidente che gli errori non seguono distribuzione normale secondo
+questo modello:
+
+\begin{itemize}
+\item I residui, sebbene abbiano media nulla, non sembrano omoschedastici;
+  oltre a questo, pare anche che il modello non riesca a cogliere una
+  curvatura presente nella variabile risposta;
+\item Dal QQPlot si vede facilmente che la curva si discosta notevolmente
+  rispetto alla distribuzione dei quantili di una distribuzione normale.
+\end{itemize}
+
+\begin{figure}[H]\label{fig:simplest-linear-model}
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/simple-linear-model-plot.eps}
+  \caption{Grafico dei residui per il modello lineare con
+  \texttt{train\$datetime}}\label{fig:simpl-mod-lin-residuals}
+\end{figure}
+
+\begin{figure}[H]\label{fig:simplest-linear-model}
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/simplest-linear-model-qqplot.eps}
+  \caption{QQPlot per il modello lineare con
+  \texttt{train\$datetime}}\label{fig:simpl-mod-lin-qqplot}
+\end{figure}
