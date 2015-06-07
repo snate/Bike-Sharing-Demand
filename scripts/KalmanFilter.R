@@ -18,7 +18,6 @@ for(i in 1 : NROW(X)) {
 }
 
 beta = matrix(beta)
-print("Hello")
 rownames(beta) = c("(Intercept)",columns)
 
 X11()
