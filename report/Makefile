@@ -12,5 +12,6 @@ clean:
 	rm -f *.out
 	rm -f *.log
 	rm -f *.pdf
+	rm -f images/*.pdf
 	rm -f sections/*.aux
 	
