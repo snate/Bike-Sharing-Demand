@@ -36,3 +36,78 @@ FWD_SW_THRESHOLD = 0.05
 MAX_P_DEGREE = 30
 columns = colnames(test)
 \end{verbatim}
+
+\subsection{linearModel.R}\label{sec:script-linear-model}
+
+\begin{verbatim}
+r2 = rep(0,length(columns)); fstatistic = rep(0,length(columns))
+
+for(i in 1:length(columns)) {
+  name = columns[i]
+  r2[i] = (cov(train[name],train$count)^2) / (var(train[name]) * var(train$count))
+  fstatistic[i] = r2[i] * (length(train$count) - 2) / (1 - r2[i])
+  print(paste(name, "has R-squared:", r2[i], " and F-statistic: ", fstatistic[i]))
+}
+
+best = 1
+for(i in 2:length(columns)) {
+  if(fstatistic[i] > fstatistic[best])
+    best = i
+}
+
+print(paste(columns[best], "has best F-statistic:", fstatistic[best]))
+print(paste(columns[best], "will be used to calculate the linear model w/ 1 variable"))
+
+train.lm = lm(log(train$count) ~ ., data = train[columns[best]])
+
+already_present = c(columns[best])
+source("scripts/linear_model_forward_steps.R")
+print(already_present)
+
+#clean
+rm(name)
+rm(i)
+rm(best)
+rm(r2)
+rm(fstatistic)
+rm(already_present)
+\end{verbatim}
+
+\subsection{linear\_model\_forward\_steps.R}
+\label{sec:script-linear-model-fwd-steps}
+
+\begin{verbatim}
+bestProb = 1
+#already_present = c(already_present,42)
+
+for(i in 1:length(columns)) {
+  if(columns[i] %in% already_present)
+    next
+  myFrame = train[,c(already_present,columns[i])]
+  train.lm2 = lm(log(train$count) ~ .,data = myFrame)
+  
+  myAnova = anova(train.lm,train.lm2)
+  print(columns[i])
+  str(myAnova$`Pr(>F)`)
+  if(myAnova$`Pr(>F)`[2] < bestProb) {
+    bestProb = myAnova$`Pr(>F)`[2]
+    best = i
+  }
+}
+
+if(bestProb < FWD_SW_THRESHOLD) {
+  already_present = c(already_present,columns[best])
+  myFrame = train[,c(already_present)]
+  train.lm = lm(log(train$count) ~ .,data = myFrame)
+  print(paste(columns[best], "column has been added to our linear model"))
+  source("scripts/linear_model_forward_steps.R")
+}
+
+#clean
+if(exists("myFrame"))
+  rm(myFrame)
+if(exists("myAnova"))
+  rm(myAnova)
+if(exists("bestProb"))
+  rm(bestProb)
+\end{verbatim}
