@@ -1,0 +1,73 @@
+\section{Primo approccio: modello lineare}
+
+\subsection{Workspace}
+
+Prima di iniziare a parlare del modello adottato per prevedere la richiesta di
+\emph{Bike sharing}, è opportuno chiarire come verranno gestite le variabili
+coinvolte durante l'analisi dei dati.
+
+\subsubsection{Variabili esplicative}
+Per quanto riguarda le variabili esplicative, \texttt{holiday},
+\texttt{working day}, \texttt{weather}, \texttt{temp}, \texttt{atemp},
+\texttt{humidity}, \texttt{windspeed} non verranno trasformate in alcun modo.
+In particolare:
+
+\begin{itemize}
+\item \texttt{holiday}, pur essendo qualitativa, è già espressa in un formato
+  accettabile, ovvero \textbf{0} per una modalità (\textbf{N}) e \textbf{1}
+  per l'altra (\textbf{S});
+\item il caso di \texttt{workingday} è totalmente analogo a quello di
+  \texttt{holiday};
+\item \texttt{weather}, pur prevedendo quattro modalità, si può vedere come
+  una variabile quantitativa per la quale più alto è il valore, peggiore è il
+  tempo (con valori compresi tra quelli nominati nella sezione
+  \ref{sec:intro-dati}).
+\end{itemize}
+
+\paragraph{Variabili trasformate} \mbox{}\\
+Non tutte le variabili in gioco erano fornite in modo tale da essere
+analizzate con semplicità.
+Le restanti variabili esplicative sono state impostate con i seguenti criteri:
+
+\begin{itemize}
+\item \texttt{datetime} conteneva al suo interno il giorno e l'ora.
+  Dopo una rapida analisi del dataset, si è notato che tutte le ore erano in
+  realtà nel formato ``HH:00:00'', deducendo che si trattasse di misurazioni
+  orarie. \\
+  Oltre a ciò è stato considerato che la richiesta del servizio di \emph{Bike
+  sharing} non dipende fortemente da un giorno particolare (e.g. 2012-07-04),
+  ma principalmente dalla stagione a cui questo apparteneva e al fatto che
+  questo fosse festivo e/o feriale o meno, fattori già presenti in altre
+  variabili esplicative. \\
+  A maggior ragione, lo scopo finale del modello era quello di effettuare
+  previsioni su giorni non presenti nel dataset, perciò riuscire a costruire
+  un modello che restituisse previsioni corrette su un giorno di cui si
+  conoscevano già i risultati non era significativo, mentre il trend con cui
+  il servizio viene richiesto durante una giornata potrebbe esserlo.\\
+  Di conseguenza, si è ritenuto opportuno trasformare \texttt{datetime} in una
+  variabile con valori interi uguali ad HH (ignorando completamente il
+  giorno), con valori perciò compresi tra 0 (mezzanotte) e 23 (11:00 PM);
+\item \texttt{season} presentava quattro possibili modalità. A differenza di
+  \texttt{weather}, le cui modalità potevano essere viste come un insieme
+  ordinato, non si vede alcun ordine per le stagioni. \\
+  Un possibile tentativo sarebbe stato, in modo del tutto analogo a
+  \texttt{weather}, pensare a un insieme dove al valore minimo sarebbe
+  corrisposta la stagione caratterizzata da temperature più fredde e da
+  condizioni metereologiche peggiori e viceversa per il valore massimo. \\
+  Tuttavia, questo approccio non è stato considerato valido poichè primavera e
+  autunno sono simili da questo punto di vista. \\
+  Si è proceduto creando due nuove variabili, \texttt{season.summer} e
+  \texttt{season.fall}, così che la variabile originaria \texttt{summer} fosse
+  riorganizzata nel seguente modo:
+  \begin{itemize}
+  \item \texttt{season} variabile che vale 1 se la stagione è primavera
+    (modalità \textbf{1} per la variabile originaria)
+  \item \texttt{season.summer} variabile che vale 1 se la stagione è primavera
+    (modalità \textbf{2} per la variabile originaria)
+  \item \texttt{season.fall} variabile che vale 1 se la stagione è primavera
+    (modalità \textbf{3} per la variabile originaria)
+  \item  \texttt{season}, \texttt{season.summer} e \texttt{season.fall} con
+    valore 0 se la stagione è inverno (modalità \textbf{4} per la variabile
+    originaria)
+  \end{itemize}
+\end{itemize}
