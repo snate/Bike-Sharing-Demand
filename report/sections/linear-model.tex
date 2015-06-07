@@ -128,16 +128,76 @@ questo modello:
   rispetto alla distribuzione dei quantili di una distribuzione normale.
 \end{itemize}
 
-\begin{figure}[H]\label{fig:simplest-linear-model}
+\begin{figure}[H]
   \centering
   \includegraphics[width=.7\columnwidth]{images/simple-linear-model-plot.eps}
   \caption{Grafico dei residui per il modello lineare con
   \texttt{train\$datetime}}\label{fig:simpl-mod-lin-residuals}
 \end{figure}
 
-\begin{figure}[H]\label{fig:simplest-linear-model}
+\begin{figure}[H]
   \centering
   \includegraphics[width=.7\columnwidth]{images/simplest-linear-model-qqplot.eps}
   \caption{QQPlot per il modello lineare con
   \texttt{train\$datetime}}\label{fig:simpl-mod-lin-qqplot}
+\end{figure}
+
+\paragraph{Modelli con variabili esplicative trasformate} \mbox{}\\
+Per rimediare a quanto detto sopra, si pensa a come introdurre nel modello
+qualcosa che contribuisca a rendere la distribuzione degli errori più simile
+a quella gaussiana.
+
+Tale procedimento è totalmente giustificato dal fatto che si ritiene di poter
+approssimare la variabilità di un comportamento umano come l'utilizzo del
+\emph{Bike sharing} con una distribuzione normale.
+
+Inizialmente il tentativo consiste nell'utilizzare un modello del tipo
+$ y = \beta{}_0 + \beta{}_1 \cdot{} z + \epsilon{} $, dove z è la variabile
+\texttt{train\$datetime} elevata al quadrato.
+
+Questa strada però non porta i risultati desiderati: nella figura
+\ref{fig:simpl-mod-lin-residuals} era ben visibile che i residui non erano
+soddisfacenti poichè ``sbagliavano'' per eccesso. Infatti vi erano errori
+significativi di sovrastima, mentre le sottostime erano numerose ma di valore
+più contenuto.
+
+Analizzando il modello ottenuto, si può infatti vedere che:
+
+\begin{itemize}
+\item l'errore standard dei residui è aumentato;
+\item il grafico dei residui è molto simile a quello visto nel primo studio;
+\item i quantili osservati per i residui si discostano ancora di molto da
+  quelli di una distribuzione normale.
+\end{itemize}
+
+\paragraph{Modelli con variabili risposta trasformate} \mbox{}\\
+Si procede dunque con un secondo tentativo, provando ad agire sul valore della
+variabile risposta. Dagli stadi di analisi precedenti ormai è chiaro che
+l'errore commesso era dovuto ad alcuni valori della variabile risposta che
+erano piuttosto elevati.
+
+Anzichè trasformare le variabili esplicative, quindi, forse è più conveniente
+trasformare la variabile risposta in modo da attenuare i valori più alti di
+questa:
+
+\centering $ w = \beta{}_0 + \beta{}_1 \cdot{} x + \epsilon{} $
+\flushleft dove $ w = log(y) $.
+
+Questo modello risulta vincente, poichè l'errore standard dei residui passa da
+166 a 1.333 e il grafico dei residui risulta più adeguato rispetto ad una
+distribuzione normale, così come il QQPlot ora ha una distribuzione dei
+quantili osservati molto più vicina a quella di una normale.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/simple-lm-log-residuals.eps}
+  \caption{Grafico dei residui per il modello lineare migliorato con
+  \texttt{train\$datetime}}\label{fig:simpl-lm-log-residuals}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/simple-lm-log-qqplot.eps}
+  \caption{QQPlot per il modello lineare migliorato con
+  \texttt{train\$datetime}}\label{fig:simpl-lm-log-qqplot}
 \end{figure}
