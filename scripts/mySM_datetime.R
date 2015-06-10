@@ -1,14 +1,14 @@
 library(sm)
 x = train$datetime
-y = train$count
-#interv = 600:900
+y = log(train$count)
+#interv = 10:100
+#divisions= 10
+#interv = 500:700
 #divisions= 100
-#interv = 650:700
-#divisions= 100
-#interv = 6800:7000
+#interv = 6000:6500
 #divisions= 1000
-interv = 690800:691000
-divisions= 100000
+interv = 64700:64750
+divisions= 10000
 
 #possiamo dire che 1,652 è il migliore valore per h
 
@@ -25,7 +25,7 @@ plot((interv)/divisions,val)
 
 val = val[1:(length(val)-1)]
 i = which(val == min(val))
-optimal = interv[i]/divisions
+optimal_h = interv[i]/divisions
 
 rm(divisions)
 rm(i)
