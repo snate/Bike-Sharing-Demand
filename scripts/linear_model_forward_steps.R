@@ -1,4 +1,4 @@
-bestProb = 1
+best_aic = AIC(train.lm)
 #already_present = c(already_present,42)
 
 for(i in 1:length(columns)) {
@@ -7,16 +7,17 @@ for(i in 1:length(columns)) {
   myFrame = train[,c(already_present,columns[i])]
   train.lm2 = lm(log(train$count) ~ .,data = myFrame)
   
-  myAnova = anova(train.lm,train.lm2)
-  print(columns[i])
-  str(myAnova$`Pr(>F)`)
-  if(myAnova$`Pr(>F)`[2] < bestProb) {
-    bestProb = myAnova$`Pr(>F)`[2]
+  aicCur = AIC(train.lm2)
+  #myAnova = anova(train.lm,train.lm2)
+  #print(columns[i])
+  #str(myAnova$`Pr(>F)`)
+  if(aicCur < best_aic) {
+    best_aic = aicCur
     best = i
   }
 }
 
-if(bestProb < FWD_SW_THRESHOLD) {
+if(best_aic < AIC(train.lm)) {
   already_present = c(already_present,columns[best])
   myFrame = train[,c(already_present)]
   train.lm = lm(log(train$count) ~ .,data = myFrame)
@@ -29,5 +30,7 @@ if(exists("myFrame"))
   rm(myFrame)
 if(exists("myAnova"))
   rm(myAnova)
-if(exists("bestProb"))
-  rm(bestProb)
+if(exists("best_aic"))
+  rm(best_aic)
+if(exists("aicCur"))
+  rm(aicCur)

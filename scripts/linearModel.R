@@ -1,10 +1,14 @@
+if(!is.factor(train$datetime))
+  train$datetime = factor(train$datetime)
 r2 = rep(0,length(columns)); fstatistic = rep(0,length(columns))
 
 for(i in 1:length(columns)) {
-  name = columns[i]
-  r2[i] = (cov(train[name],train$count)^2) / (var(train[name]) * var(train$count))
-  fstatistic[i] = r2[i] * (length(train$count) - 2) / (1 - r2[i])
-  print(paste(name, "has R-squared:", r2[i], " and F-statistic: ", fstatistic[i]))
+  print(columns[i])
+  myCol = train[columns[i]]
+  train.lm = lm(log(train$count)~., data = myCol)
+  r2[i] = summary(train.lm)$r.squared
+  fstatistic[i] = summary(train.lm)$fstatistic[1]
+  print(paste(columns[i], "has R-squared:", r2[i], " and F-statistic: ", fstatistic[i]))
 }
 
 best = 1
@@ -23,9 +27,9 @@ source("scripts/linear_model_forward_steps.R")
 print(already_present)
 
 #clean
-rm(name)
 rm(i)
 rm(best)
 rm(r2)
 rm(fstatistic)
 rm(already_present)
+rm(myCol)
