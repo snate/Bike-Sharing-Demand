@@ -27,7 +27,12 @@ train$season[train$season == 2] = 0
 train$season[train$season == 3] = 0
 train$season[train$season == 4] = 0
 
+#FACTOR HOURS
+test$datetime = factor(test$datetime)
+train$datetime = factor(train$datetime)
+
 # COSTANTS
-FWD_SW_THRESHOLD = 0.05
+FWD_SW_THRESHOLD = 0.1
 MAX_P_DEGREE = 30
 columns = colnames(test)
+F1 = as.formula(paste("log(train$count)~",paste(names(train[-c(10:12)]), collapse="+")))
