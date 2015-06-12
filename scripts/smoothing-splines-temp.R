@@ -1,8 +1,6 @@
 #smoothing splines
 indexes = sample(1:length(train$count), size=length(train$count)/2)
 indexes.v = sample(setdiff(1:length(train$count), indexes))
-str(indexes)
-str(indexes.v)
 
 x = train$temp
 str(x)
