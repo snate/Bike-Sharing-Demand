@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{360.8bp}%
+    \setlength{\unitlength}{360bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -48,7 +48,7 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,1.07538803)%
+  \begin{picture}(1,1.94222222)%
     \put(0,0){\includegraphics[width=\unitlength]{lm-with-all-vars.eps}}%
   \end{picture}%
 \endgroup%
