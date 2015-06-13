@@ -2,17 +2,23 @@
 
 \subsection{populate.R}\label{sec:script-populate}
 \begin{verbatim}
-# read tables
+# Read tables
 test = read.csv(file="data/test.csv")
+train = read.csv(file="data/train.csv")
+
+# DATETIME # Consider only hour
 test$datetime = as.POSIXct(test$datetime)
 test$datetime = strptime(test$datetime, "%Y-%m-%d %H:%M:%S")
 test$datetime <- as.numeric(format(test$datetime, "%H"))
-train = read.csv(file="data/train.csv")
 train$datetime = as.POSIXct(train$datetime)
 train$datetime = strptime(train$datetime, "%Y-%m-%d %H:%M:%S")
 train$datetime <- as.numeric(format(train$datetime, "%H"))
 
-#SEASONS#
+# HOURS # Treat hour of day as a qualitative covariate
+test$datetime = factor(test$datetime)
+train$datetime = factor(train$datetime)
+
+# SEASONS # Treat as qualitative covariate
 # summer
 train$season.summer = rep(0,length(train$season))
 train$season.summer[train$season == 2] = 1
@@ -31,10 +37,15 @@ train$season[train$season == 2] = 0
 train$season[train$season == 3] = 0
 train$season[train$season == 4] = 0
 
-# COSTANTS
-FWD_SW_THRESHOLD = 0.05
-MAX_P_DEGREE = 30
+# COSTANTS # Some constants
 columns = colnames(test)
+FWD_SW_THRESHOLD = 0.1
+MAX_P_DEGREE = 30
+F1 = as.formula(paste("log(train$count)~",paste(names(train[-c(10:12)]), collapse="+")))
+
+# LIFT-ROC # Import lift-roc script
+source("scripts/lift-roc1.R")
+
 \end{verbatim}
 
 \subsection{linearModel.R}\label{sec:script-linear-model}
