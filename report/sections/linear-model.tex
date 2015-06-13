@@ -145,7 +145,8 @@ questo modello:
 \paragraph{Modelli con variabili esplicative trasformate} \mbox{}\\
 Per rimediare a quanto detto sopra, si pensa a come introdurre nel modello
 qualcosa che contribuisca a rendere la distribuzione degli errori più simile
-a quella gaussiana.
+a quella gaussiana e, più in generale, ad abbassare il valore della somma dei
+quadrati dei residui.
 
 Tale procedimento è totalmente giustificato dal fatto che si ritiene di poter
 approssimare la variabilità di un comportamento umano come l'utilizzo del
@@ -155,13 +156,15 @@ Inizialmente il tentativo consiste nell'utilizzare un modello del tipo
 $ y = \beta{}_0 + \beta{}_1 \cdot{} z + \epsilon{} $, dove z è la variabile
 \texttt{train\$datetime} elevata al quadrato.
 
-Questa strada però non porta i risultati desiderati: nella figura
-\ref{fig:simpl-mod-lin-residuals} era ben visibile che i residui non erano
-soddisfacenti poichè ``sbagliavano'' per eccesso. Infatti vi erano errori
-significativi di sovrastima, mentre le sottostime erano numerose ma di valore
-più contenuto.
+Questa strada però non porta i risultati desiderati: questo può essere
+comprensibile poichè nella figura \ref{fig:simpl-mod-lin-residuals} era ben
+visibile che le stime ``sbagliavano'' per eccesso (visti i valori dei residui.
 
-Analizzando il modello ottenuto, si può infatti vedere che:
+Questo ci porta a pensare che elevare al quadrato la variabile esplicativa
+possa solo aumentare questo effetto negativo.
+
+Analizzando il modello ottenuto (non riportato perchè molto simile al
+precedente), si può infatti vedere che:
 
 \begin{itemize}
 \item l'errore standard dei residui è aumentato;
