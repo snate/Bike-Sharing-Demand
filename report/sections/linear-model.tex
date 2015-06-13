@@ -27,7 +27,7 @@ In particolare:
 \paragraph{Variabili trasformate} \mbox{}\\
 Non tutte le variabili in gioco erano fornite in modo tale da essere
 analizzate con semplicità.
-Le restanti variabili esplicative sono state impostate con i seguenti criteri:
+Le restanti variabili esplicative sono state modificate con i seguenti criteri:
 
 \begin{itemize}
 \item \texttt{datetime} conteneva al suo interno il giorno e l'ora.
@@ -35,7 +35,7 @@ Le restanti variabili esplicative sono state impostate con i seguenti criteri:
   realtà nel formato ``HH:00:00'', deducendo che si trattasse di misurazioni
   orarie. \\
   Oltre a ciò è stato considerato che la richiesta del servizio di \emph{Bike
-  sharing} non dipende fortemente da un giorno particolare (e.g. 2012-07-04),
+  sharing} non dipende strettamente da un giorno particolare (e.g. 2012-07-04),
   ma principalmente dalla stagione a cui questo apparteneva e al fatto che
   questo fosse festivo e/o feriale o meno, fattori già presenti in altre
   variabili esplicative. \\
@@ -43,7 +43,7 @@ Le restanti variabili esplicative sono state impostate con i seguenti criteri:
   previsioni su giorni non presenti nel dataset, perciò riuscire a costruire
   un modello che restituisse previsioni corrette su un giorno di cui si
   conoscevano già i risultati non era significativo, mentre il trend con cui
-  il servizio viene richiesto durante una giornata potrebbe esserlo.\\
+  il servizio viene richiesto durante una giornata potrebbe esserlo. \\
   Di conseguenza, si è ritenuto opportuno trasformare \texttt{datetime} in una
   variabile con valori interi uguali ad HH (ignorando completamente il
   giorno), con valori perciò compresi tra 0 (mezzanotte) e 23 (11:00 PM);
@@ -76,7 +76,7 @@ Tali trasformazioni sono state applicate durante il popolamento del dataset, il
 cui script è stato riportato in sezione \ref{sec:script-populate}.
 
 In fondo allo script si possono notare alcune costanti che vengono settate per
-il workspace: si tratta di \texttt{columns}, ovvero il nome delle variabili
+il workspace: si tratta di \texttt{columns}, ovvero i nomi delle variabili
 esplicative utilizzate, e di altre costanti il cui uso verrà spiegato più
 dettagliatamente in seguito.
 
