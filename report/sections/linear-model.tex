@@ -86,6 +86,8 @@ Per le variabili risposta, è stato scelto di considerare solo
 \texttt{train\$registered} e \texttt{train\$casual} è del tutto analogo a
 quello della variabile che insieme compongono.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Modello lineare}\label{sec:mod-lin}
 Dopo aver impostato correttamente il workspace, si può procedere calcolando il
 modello lineare semplice $ y = \beta{}_0 + \beta{}_1 \cdot{} x + \epsilon{} $
@@ -100,14 +102,20 @@ formato scelto per la variabile \texttt{datetime}, spiegato nella sezione
 \ref{sec:modlin-work-espl}, ovvero che l'ora è uno dei fattori che incidono
 molto sulla richiesta del servizio di \emph{Bike sharing}.
 
-Tale considerazione può essere compresa guardando i valori dei residui visibili
-grazie alla visione d'insieme del modello lineare fornita dal comando
-\texttt{summary()}.
+Ci si aspetta infatti un andamento dicotomico della richiesta a seconda che
+l'orario sia notturno (poca gente si muove di notte, ancor meno lo fa in bici)
+o che sia diurno: sia i residenti che i turisti è più facile che si spostino di
+giorno in bici per la città.
 
-\begin{figure}[H]\label{fig:simplest-linear-model}
+Tale considerazione può essere compresa guardando in figura
+\ref{fig:simplest-linear-model} i valori dei residui visibili grazie alla
+visione d'insieme del modello lineare fornita dal comando \texttt{summary()}.
+
+\begin{figure}
   \centering
-  \includegraphics[width=.7\columnwidth]{images/simplest-linear-model.eps}
+  \includegraphics[width=.5\columnwidth]{images/simplest-linear-model.eps}
   \caption{Modello lineare con \texttt{train\$datetime}}
+  \label{fig:simplest-linear-model}
 \end{figure}
 
 I dati relativi al modello lineare appena individuato potrebbero ingenuamente
@@ -115,71 +123,43 @@ suggerire che la stima individuata per il coefficiente $\beta{}_1$ sia buona,
 visto un valore molto elevato della statistica F e, di conseguenza, un p-value
 prossimo a 0.
 
-Tuttavia, richiedendo i grafici relativi al modello lineare, è ben facile
-intuire che il modello lineare calcolato non è affatto soddisfacente, poichè è
-evidente che gli errori non seguono distribuzione normale secondo
-questo modello:
+Tuttavia, vedendo il grafico dei residui di questo modello lineare (fig.
+\ref{fig:simpl-mod-lin-residuals}), è ben facile intuire che il modello lineare
+calcolato non è affatto soddisfacente, poichè è evidente che gli errori non
+riescono a cogliere una curvatura presente nella risposta.
 
-\begin{itemize}
-\item I residui, sebbene abbiano media nulla, non sembrano omoschedastici;
-  oltre a questo, pare anche che il modello non riesca a cogliere una
-  curvatura presente nella variabile risposta;
-\item Dal QQPlot si vede facilmente che la curva si discosta notevolmente
-  rispetto alla distribuzione dei quantili di una distribuzione normale.
-\end{itemize}
-
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=.7\columnwidth]{images/simple-linear-model-plot.eps}
   \caption{Grafico dei residui per il modello lineare con
-  \texttt{train\$datetime}}\label{fig:simpl-mod-lin-residuals}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=.7\columnwidth]{images/simplest-linear-model-qqplot.eps}
-  \caption{QQPlot per il modello lineare con
-  \texttt{train\$datetime}}\label{fig:simpl-mod-lin-qqplot}
+  \texttt{train\$datetime}}
+  \label{fig:simpl-mod-lin-residuals}
 \end{figure}
 
 \paragraph{Modelli con variabili esplicative trasformate} \mbox{}\\
 Per rimediare a quanto detto sopra, si pensa a come introdurre nel modello
-qualcosa che contribuisca a rendere la distribuzione degli errori più simile
-a quella gaussiana e, più in generale, ad abbassare il valore della somma dei
-quadrati dei residui.
-
-Tale procedimento è totalmente giustificato dal fatto che si ritiene di poter
-approssimare la variabilità di un comportamento umano come l'utilizzo del
-\emph{Bike sharing} con una distribuzione normale.
+qualcosa che riesca a rappresentare nel modello la curvatura notata in figura
+\ref{fig:simpl-mod-lin-residuals}.
 
 Inizialmente il tentativo consiste nell'utilizzare un modello del tipo
 $ y = \beta{}_0 + \beta{}_1 \cdot{} z + \epsilon{} $, dove z è la variabile
 \texttt{train\$datetime} elevata al quadrato.
 
-Questa strada però non porta i risultati desiderati: questo può essere
-comprensibile poichè nella figura \ref{fig:simpl-mod-lin-residuals} era ben
-visibile che le stime ``sbagliavano'' per eccesso (visti i valori dei residui.
+Come ci si può aspettare, questa strada però non porta i risultati desiderati:
+nella figura \ref{fig:simpl-mod-lin-residuals} era ben visibile che le stime
+``sbagliavano'' per eccesso (erano presenti molte sovrastime nel primo modello
+lineare).
 
-Questo ci porta a pensare che elevare al quadrato la variabile esplicativa
-possa solo aumentare questo effetto negativo.
+Perciò è totalmente naturale che elevando al quadrato la variabile esplicativa,
+questo effetto negativo possa solo aumentare.
 
-Analizzando il modello ottenuto (non riportato perchè molto simile al
-precedente), si può infatti vedere che:
-
-\begin{itemize}
-\item l'errore standard dei residui è aumentato;
-\item il grafico dei residui è molto simile a quello visto nel primo studio;
-\item i quantili osservati per i residui si discostano ancora di molto da
-  quelli di una distribuzione normale.
-\end{itemize}
-
-\paragraph{Modelli con variabili risposta trasformate} \mbox{}\\
+\paragraph{Modello con variabile risposta trasformata} \mbox{}\\
 Si procede dunque con un secondo tentativo, provando ad agire sul valore della
 variabile risposta. Dagli stadi di analisi precedenti ormai è chiaro che
 l'errore commesso era dovuto ad alcuni valori della variabile risposta che
-erano piuttosto elevati.
+erano piuttosto elevati e non venivano spiegati dal modello.
 
-Anzichè trasformare le variabili esplicative, quindi, forse è più conveniente
+Anzichè trasformare le variabili esplicative, quindi, è più conveniente
 trasformare la variabile risposta in modo da attenuare i valori più alti di
 questa:
 
@@ -187,27 +167,30 @@ questa:
 \flushleft dove $ w = log(y) $.
 
 Questo modello risulta vincente, poichè l'errore standard dei residui passa da
-166 a 1.333 e il grafico dei residui risulta più adeguato rispetto ad una
-distribuzione normale, così come il QQPlot ora ha una distribuzione dei
-quantili osservati molto più vicina a quella di una normale.
+126.1 a 1.381 (come visibile in fig. \ref{fig:simpl-lm-log-summary}) e il
+grafico dei residui non presenta più curvature anomale e risulta più conforme
+rispetto ad una distribuzione normale (vedi fig.
+\ref{fig:simpl-lm-log-residuals}).
 
-\begin{figure}[H]
+\begin{figure}
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/simpl-lm-summary.eps}
+  \caption{Resoconto del modello con variabile trasformata}
+  \label{fig:simpl-lm-log-summary}
+\end{figure}
+
+\begin{figure}
   \centering
   \includegraphics[width=.7\columnwidth]{images/simple-lm-log-residuals.eps}
-  \caption{Grafico dei residui per il modello lineare migliorato con
-  \texttt{train\$datetime}}\label{fig:simpl-lm-log-residuals}
+  \caption{Grafico dei residui con variabile trasformata}
+  \label{fig:simpl-lm-log-residuals}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=.7\columnwidth]{images/simple-lm-log-qqplot.eps}
-  \caption{QQPlot per il modello lineare migliorato con
-  \texttt{train\$datetime}}\label{fig:simpl-lm-log-qqplot}
-\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Modello lineare con \emph{forward stepwise selection}}\label{sec:mod-lin-fwd-sw}
-Il modello di prima ha portato a discreti risultati, se non per il fatto che
-utilizzava solamente una delle variabili esplicative.
+Il modello di prima ha portato a discreti risultati, però utilizzava solamente
+una delle variabili esplicative.
 
 Un approccio naïf potrebbe essere quello di inserire nel calcolo del modello
 lineare tutte le variabili esplicative presenti nel set \texttt{train} e di
@@ -224,60 +207,11 @@ altre che invece è sensato che appartengano al nostro modello:
 \end{figure}
 
 Tuttavia, anzichè provare manualmente qualsiasi combinazione di variabili
-affinchè non si trovi il modello lineare migliore, si decide di automatizzare
-il tutto con un paio di script:
-
-\begin{itemize}
-\item \texttt{linearModel.R} (sez. \ref{sec:script-linear-model}): questo
-  script in pratica realizza quanto fatto nella prima parte dell'analisi
-  tramite un modello lineare.
-  \begin{enumerate}
-  \item Dato il modello $ w = \beta{}_0 + \beta{}_1 \cdot{} x + \epsilon{} $,
-  viene cercata la variabile esplicativa più significativa, confrontando la
-  statistica F delle variabili \texttt{train\$[columns]} (ovvero le variabili
-  esplicative);
-  \item Nel frattempo, vengono stampate a video le variabili esplicative, il
-  coefficiente di determinazione e la statistica F ottenuti usando questi come
-  ``x'' per il modello;
-  \item A questo punto, viene trovata la variabile più significativa, tale
-  risultato viene stampato a video e questa viene usata per calcolare il
-  miglior modello lineare con una variabile esplicativa;
-  \item Il nome di questa variabile viene salvato in un array chiamato
-  \texttt{already\_present} e viene invocato il secondo script.
-  \item Alla fine dello script, il workspace viene pulito, lasciando solamente
-  le variabili \texttt{train.lm} (il modello ricercato) e \texttt{train.lm2}
-  (il modello con tutte le variabili esplicative oppure con una variabile non
-  significativa presente oltre a quelle presenti in \texttt{train.lm}).
-  \end{enumerate}
-\item \texttt{linear\_model\_forward\_steps.R} (sez.
-  \ref{sec:script-linear-model-fwd-steps}): questo script serve per iterare
-  lungo le variabili esplicative al fine di inserire in modo incrementale le
-  variabili più significative per il nostro modello.
-  \begin{enumerate}
-  \item All'inizio dello script, \texttt{train.lm} è il modello lineare con n
-    variabili esplicative, dove n è il numero di volte che è stato invocato;
-  \item Per ognuna delle variabili esplicative, viene eseguito un insieme di
-    istruzioni. Se la variabile è già presente nel modello (e quindi in
-    \texttt{already\_present}), viene saltata;
-  \item Si procede calcolando il modello lineare aggiungendo alle variabili
-    già presenti quella coinvolta nell'iterazione corrente;
-  \item Viene eseguita l'ANalysis Of VAriance (\textbf{ANOVA}) sul nuovo
-    modello;
-  \item Tramite queste iterazioni, si trova la variabile più significativa da
-    aggiungere al modello lineare presente all'inizio dello script;
-  \item Tale variabile viene inserita solamente se contribuisce in modo
-      significativo a migliorare il modello; per far questo, si confronta il
-      suo p-value con una soglia stabilita a priori (nel nostro caso 5\%),
-      impostata con lo script di popolamento (sez. \ref{sec:script-populate})
-      nella costante \texttt{FWD\_SW\_THRESHOLD};
-    \item Se la variabile è stata inserita, viene ricalcolato \texttt{train.lm}
-      aggiungendo questa variabile, vengono stampate le variabili presenti nel
-      modello e viene invocato ricorsivamente questo script;
-    \item Quando non vi sono più variabili da aggiungere, il workspace viene
-      pulito (facendo attenzione a non ripetere rimozioni su oggetti già
-      cancellati) e in \texttt{train.lm} è presente il modello ricercato.
-  \end{enumerate}
-\end{itemize}
+fino a quando non viene trovato il modello lineare migliore, si decide di
+automatizzare il tutto con un paio di script (\texttt{linearModel.R} in sez.
+\ref{sec:script-linear-model}, \texttt{linear\_model\_forward\_steps.R} in
+sez. \ref{sec:script-linear-model-fwd-steps}) che implementano la regressione
+lineare con \emph{forward-stepwise selection}.
 
 Di seguito vengono riportati i dati del modello lineare ottenuto tramite gli
 script sopra descritti:
@@ -288,6 +222,18 @@ script sopra descritti:
   \caption{Modello lineare calcolato tramite forward-stepwise selection}
     \label{fig:lm-after-fwd-steps}
 \end{figure}
+
+Come è possibile vedere nella seguente figura, i residui sono molto
+soddisfacenti e sono sparsi intorno allo zero abbastanza uniformemente.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.55\columnwidth]{images/fwd-sw-residuals.eps}
+  \caption{Modello lineare calcolato tramite forward-stepwise selection}
+    \label{fig:fwd-sw-residuals}
+\end{figure}
+
+Tale modello è stato usato anche per la scala originale
 
 \subsection{Stima ai minimi quadrati con filtro ricorsivo}
 Anche se non richiesto dal problema, si è voluto rendere il calcolo del
