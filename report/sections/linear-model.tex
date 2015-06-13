@@ -111,9 +111,9 @@ Tale considerazione può essere compresa guardando in figura
 \ref{fig:simplest-linear-model} i valori dei residui visibili grazie alla
 visione d'insieme del modello lineare fornita dal comando \texttt{summary()}.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
-  \includegraphics[width=.5\columnwidth]{images/simplest-linear-model.eps}
+  \includegraphics[width=.5\columnwidth]{images/lm/simplest-linear-model.eps}
   \caption{Modello lineare con \texttt{train\$datetime}}
   \label{fig:simplest-linear-model}
 \end{figure}
@@ -128,9 +128,9 @@ Tuttavia, vedendo il grafico dei residui di questo modello lineare (fig.
 calcolato non è affatto soddisfacente, poichè è evidente che gli errori non
 riescono a cogliere una curvatura presente nella risposta.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
-  \includegraphics[width=.7\columnwidth]{images/simple-linear-model-plot.eps}
+  \includegraphics[width=.7\columnwidth]{images/lm/simple-linear-model-plot.eps}
   \caption{Grafico dei residui per il modello lineare con
   \texttt{train\$datetime}}
   \label{fig:simpl-mod-lin-residuals}
@@ -172,16 +172,16 @@ grafico dei residui non presenta più curvature anomale e risulta più conforme
 rispetto ad una distribuzione normale (vedi fig.
 \ref{fig:simpl-lm-log-residuals}).
 
-\begin{figure}
+\begin{figure}[H]
   \centering
-  \includegraphics[width=.7\columnwidth]{images/simpl-lm-summary.eps}
+  \includegraphics[width=.7\columnwidth]{images/lm/simpl-lm-summary.eps}
   \caption{Resoconto del modello con variabile trasformata}
   \label{fig:simpl-lm-log-summary}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
-  \includegraphics[width=.7\columnwidth]{images/simple-lm-log-residuals.eps}
+  \includegraphics[width=.7\columnwidth]{images/lm/simple-lm-log-residuals.eps}
   \caption{Grafico dei residui con variabile trasformata}
   \label{fig:simpl-lm-log-residuals}
 \end{figure}
@@ -196,29 +196,40 @@ Un approccio naïf potrebbe essere quello di inserire nel calcolo del modello
 lineare tutte le variabili esplicative presenti nel set \texttt{train} e di
 calcolare il modello lineare con il comando fornito da R.
 
-Come è possibile vedere, ci sono alcune variabili che non sono significative e
-altre che invece è sensato che appartengano al nostro modello:
+Come è possibile vedere in figura \ref{fig:simpl-lm-log-qqplot}, ci sono
+alcune variabili che sono poco significative e altre che invece è sensato che
+appartengano al nostro modello.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.55\columnwidth]{images/lm-with-all-vars.eps}
-  \caption{Modello lineare calcolato su tutte le variabili in modo
-    non-ordinato}\label{fig:simpl-lm-log-qqplot}
+  \includegraphics[width=.55\columnwidth]{images/lm/lm-with-all-vars.eps}
+  \caption{Modello lineare calcolato su tutte le variabili}
+  \label{fig:simpl-lm-log-qqplot}
 \end{figure}
 
-Tuttavia, anzichè provare manualmente qualsiasi combinazione di variabili
-fino a quando non viene trovato il modello lineare migliore, si decide di
-automatizzare il tutto con un paio di script (\texttt{linearModel.R} in sez.
+Tuttavia non sappiamo se potremmo togliere qualche variabile che potrebbe
+essere significativa solamente per l'ordine in cui è stata inserita, o se la
+variabile \texttt{holiday} possa essere trascurata per il nostro modello.
+
+Tale variabile sembrerebbe significativa, poichè ci si aspetta che nei giorni
+di festa vi sia più traffico in città (i dati sono relativi a Brooklyn) e che
+la richiesta di \emph{Bike sharing} aumenti per evitare lunghe code in
+macchina.
+
+Anzichè provare manualmente qualsiasi combinazione di variabili fino a quando
+non viene trovato il modello lineare migliore, si decide di automatizzare il
+tutto con un paio di script (\texttt{linearModel.R} in sez.
 \ref{sec:script-linear-model}, \texttt{linear\_model\_forward\_steps.R} in
 sez. \ref{sec:script-linear-model-fwd-steps}) che implementano la regressione
-lineare con \emph{forward-stepwise selection}.
+lineare con \emph{forward-stepwise selection} penalizzando l'utilizzo di più
+variabili tramite il criterio di Aikake.
 
 Di seguito vengono riportati i dati del modello lineare ottenuto tramite gli
 script sopra descritti:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.55\columnwidth]{images/lm-after-fwd-steps.eps}
+  \includegraphics[width=.55\columnwidth]{images/lm/lm-after-fwd-steps.eps}
   \caption{Modello lineare calcolato tramite forward-stepwise selection}
     \label{fig:lm-after-fwd-steps}
 \end{figure}
@@ -228,12 +239,43 @@ soddisfacenti e sono sparsi intorno allo zero abbastanza uniformemente.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.55\columnwidth]{images/fwd-sw-residuals.eps}
+  \includegraphics[width=.55\columnwidth]{images/lm/fwd-sw-residuals.eps}
   \caption{Modello lineare calcolato tramite forward-stepwise selection}
     \label{fig:fwd-sw-residuals}
 \end{figure}
 
-Tale modello è stato usato anche per la scala originale
+Il risultato non ci sorprende, siccome ci si aspettava che tutte le variabili
+apportassero un contributo significativo per la richiesta del servizio; in
+particolare, è possibile vedere la loro importanza in base all'ordine con cui
+sono state inserite nel modello.
+
+Tale procedura è stata applicata anche ai valori della variabile risposta in
+scala originale, ottenendo i seguenti risultati:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.55\columnwidth]{images/lm/fwd-sw-nolog.eps}
+  \caption{Modello lineare in scala originale calcolato tramite
+    forward-stepwise selection}
+    \label{fig:lm-after-fwd-steps-nolog}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.55\columnwidth]{images/lm/fwd-sw-nolog-residuals.eps}
+  \caption{Modello lineare calcolato tramite forward-stepwise selection}
+    \label{fig:fwd-sw-residuals}
+\end{figure}
+
+Un po' a sorpresa, nella scala originale i dati sono spiegati solamente dalla
+variabile \texttt{temp}.
+
+Tuttavia questo è ritenuto possibile poichè abbiamo visto prima che la
+regressione lineare, per questi dati, in scala originale non coglie tutte le
+variazioni della richiesta del servizio e approssimando l'intero modello ad
+una retta con una sola variabile esplicativa.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Stima ai minimi quadrati con filtro ricorsivo}
 Anche se non richiesto dal problema, si è voluto rendere il calcolo del
@@ -255,32 +297,6 @@ segua un modello ``vero'', costante nel tempo e non casuale. In poche parole,
 ci si aspetta che i vari valori $ \beta{}_i $ (dove $i$ è un indice relativo
 alle variabili esplicative) abbiano stabilità asintotica.
 
-Procediamo quindi con la descrizione per spiegare in cosa consiste tale filtro:
-
-\begin{enumerate}
-\item Prima di tutto vengono mescolati casualmente i dati presenti nella
-  matrice di partenza, in modo tale da assicurare che il modello finale abbia
-  valori vicini a quello trovato nella sezione \ref{sec:mod-lin-fwd-sw}
-  indipendentemente dall'ordine in cui sono elaborate le righe della matrice
-  \texttt{train};
-\item Vengono generate una matrice X e si calcola il logaritmo della variabile
-  risposta (per le analisi svolte nelle sezioni precedenti)
-\item Inizialmente la matrice \texttt{V} che sarà utilizzata per le
-  ortogonalizzazioni successive è la matrice identità, mentre $ \beta{} $, la
-  colonna di coefficienti relativi alle variabili esplicative, viene calcolata
-  utilizzando come variabile risposta il valore medio di \texttt{y};
-\item Per tutte le righe in X, viene iterato un filtro ricorsivo su \texttt{V}
-  con il quale si calcola la matrice H (\emph{Hat}) in base all'ultima
-  osservazione arrivata per le variabili esplicative e, grazie a questa,
-  aggiorna il vettore $ \beta{} $;
-\item Al termine delle iterazioni, le righe di $ \beta{} $ vengono chiamate
-  con gli stessi nomi delle variabili esplicative per favorirne il confronto
-  con modelli ottenuti con strumenti automatici;
-\item Vengono mostrati tre valori del vettore $ \beta{} $ e il modo in cui essi
-  sono evoluti durante l'algoritmo ricorsivo: è possibile vedere che i
-  coefficienti hanno stabilità asintotica.
-\end{enumerate}
-
 Di seguito vengono riportati i coefficienti di $ \beta{} $ che, se confrontati
 con quelli in figura \ref{fig:lm-after-fwd-steps}, ci convincono che il filtro
 ricorsivo abbia funzionato correttamente.
@@ -289,28 +305,22 @@ Oltre a questi coefficienti, vengono riportati i grafici in cui è possibile
 vedere che i valori in $ \beta{} $ raggiungono i valori ``veri'' per numerosità
 di osservazioni sufficientemente elevate.
 
+%%%%%%%%%%%%%%%%%%%%
+%%% TODO
+%%% 
+%%% RIFARE FIGURE
+%%%%%%%%%%%%%%%%%%%%
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.55\columnwidth]{images/kalman-beta.eps}
+  \includegraphics[width=.55\columnwidth]{images/lm/kalman-beta.eps}
   \caption{Coefficienti calcolati tramite filtro ricorsivo}
     \label{fig:kalman-beta}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.55\columnwidth]{images/kalman-asymptotic.eps}
+  \includegraphics[width=.55\columnwidth]{images/lm/kalman-asymptotic.eps}
   \caption{Stabilità asintotica del filtro ricorsivo}
     \label{fig:kalman-asymptotic}
 \end{figure}
-
-Si può notare come $ \beta{} $ contenga in realtà tutte le variabili e non solo
-quelle più significative, stando a quanto trovato nella sezione
-\ref{sec:mod-lin-fwd-sw}. Ciò è dovuto al fatto che non è strettamente
-necessario seguire un ordine preciso per queste due fasi di analisi, tuttavia
-come possibile sviluppo applicativo, se sorgesse la necessità, sarebbe
-possibile combinare i due in modo tale che eseguendo \emph{forward-stepwise
-selection} su una parte sufficientemente grande dei dati si riesca ad
-individuare le variabili che sono significative e quelle che non lo sono, per
-poi lasciare che il filtro ricorsivo gestisca lo stream di dati in input
-calcolando il modello solamente per le variabili esplicative trovate nella
-prima fase.
