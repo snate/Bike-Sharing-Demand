@@ -251,7 +251,7 @@ y = log(train$count)
 y.v = y[indexes.v]
 y = y[indexes]
 
-# Find best span by cross validation
+# Find best span by X-validation
 nummin = 1
 num = 10
 val = matrix(NA,num,2)
@@ -268,7 +268,7 @@ print(val[nummin:num,])
 optimal_span = min(val[,2])
 optimal_span = val[,1][val[,2] == optimal_span]
 print(paste("Optimal span is",optimal_span))
-cat("premere <Enter>"); readline()
+cat("Premere <Enter>"); readline()
 
 # Draw loess with best span
 lo1 <- loess.smooth(x,y,span=optimal_span)
@@ -287,6 +287,98 @@ rm(nummin)
 rm(val)
 rm(x)
 rm(x.v)
+rm(y)
+rm(y.v)
+\end{verbatim}
+
+\subsection{regression-splines-temp.R}\label{sec:regression-splines-temp}
+\begin{verbatim}
+# REGRESSION SPLINES #
+# Load 'splines' library
+library(splines)
+
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+str(indexes)
+str(indexes.v)
+
+# Get actual training & test set
+x = train$temp
+str(x)
+x.v = x[indexes.v]
+x = x[indexes]
+y = log(train$count)
+y.v = y[indexes.v]
+y = y[indexes]
+
+# Plot training (red) & test (green) set
+plot(x,y,pch=2,col=2,main="splines di regressione")
+points(x,y.v,pch=3,col=3)
+
+# Draw regression spline of arbitrary length
+xi = seq(min(x),max(x),length=13)
+xx = sort(c(x,xi[2:(length(xi)-1)]))
+m1 = lm(y~bs(x,knots=xi[2:(length(xi)-1)],degree=3))
+fit1 = predict(m1,data.frame(x=xx))
+lines(xx,fit1)
+# Draw splines intervals
+for(i in 1:length(xi)) {
+  abline(v=xi[i], lty=3)
+}
+
+# Find best number of knots by X-validation
+nummin = 3
+num = 25
+val = matrix(NA,num,2)
+for (i in nummin:num){
+  h = i
+  val[i,1] = h
+  xi= seq(min(x),max(x),length=i+2)
+  xx = sort(c(x,xi[2:(length(xi)-1)]))
+  m1 = lm(y~bs(x,knots=xi[2:(length(xi)-1)],degree=3))
+  
+  val[i,2] = sum((y.v-predict(m1))^2)
+}
+
+# Show error as a function of number of knots and find best #knots
+plot(val[nummin:num,1], val[nummin:num,2],xlab="Numero di nodi",ylab="Errore")
+print(val[nummin:num,])
+val = na.omit(val)
+bestVal = min(val[,2])
+pos = val[,1][val[,2]==bestVal]
+print(paste("Wow",bestVal,"in position",pos))
+cat("Premere <Enter>"); readline()
+
+# Draw spline with best number of knots
+plot(x,y,pch=2,col=2,main="splines di regressione",xlab="temp",ylab="count")
+points(x,y.v,pch=3,col=3)
+xi<-seq(min(x),max(x),length=pos)
+xx<-sort(c(x,xi[2:(length(xi)-1)]))
+m1<-lm(y~bs(x,knots=xi[2:(length(xi)-1)],degree=3))
+fit1<-predict(m1,data.frame(x=xx))
+lines(xx,fit1,col=4)
+# Draw splines intervals
+for(i in 1:length(xi)) {
+  abline(v=xi[i], lty=3)
+}
+
+# Clean workspace
+rm(bestVal)
+rm(fit1)
+rm(h)
+rm(i)
+rm(indexes)
+rm(indexes.v)
+rm(m1)
+rm(num)
+rm(nummin)
+rm(pos)
+rm(val)
+rm(x)
+rm(x.v)
+rm(xi)
+rm(xx)
 rm(y)
 rm(y.v)
 \end{verbatim}
