@@ -157,7 +157,7 @@ $ \lambda = \infty \rightarrow $ regressione lineare semplice).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{MARS}\label{doc:smoothing-splines}
+\subsection{MARS}\label{sec:mars}
 Oltre alle tecniche viste nelle sezioni \ref{sec:regression-splines} e
 \ref{sec:smoothing-splines} vi è un ulteriore tecnica che utilizza le spline,
 ovvero MARS (\emph{Multivariate Adaptive Regression Splines}).
@@ -168,3 +168,132 @@ variabili esplicative del dataset.
 
 Lo script utilizzato per MARS è \texttt{mars.R}, presente in sezione
 \ref{sec:mars-script}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{GAM}\label{sec:gam}
+Tutti i modelli visti finora soffrivano fortemente della ``maledizione della
+dimensionalità'': al crescere di p (numero di variabili coinvolte e/o grado del
+polinomio) l'errore cresce rapidamente a causa dell'\emph{overfitting}.
+
+Con i GAM (\emph{Generalized Additive Model}) questo problema viene risolto
+grazie a una struttura più flessibile del modello.
+
+Lo script utilizzato è \texttt{gam.R}, presente nella sezione
+\ref{sec:gam-script}. Di seguito vengono riportate le stime per le varie
+variabili esplicative utilizzate nel modello.
+
+\begin{figure}[H]
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-datetime.eps}
+        \end{subfigure}
+        \hspace*{\fill}
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-season.eps}
+        \end{subfigure}
+
+        \medskip
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-holiday.eps}
+        \end{subfigure}
+        \hspace*{\fill}
+        \begin{subfigure}{.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-working-day.eps}
+        \end{subfigure}
+
+        \medskip
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-weather.eps}
+        \end{subfigure}
+        \hspace*{\fill}
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-temp.eps}
+        \end{subfigure}
+
+        \caption{Grafici GAM - 1}\label{fig:gam-1}
+\end{figure}
+
+\begin{figure}[H]
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-atemp.eps}
+        \end{subfigure}
+        \hspace*{\fill}
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-humidity.eps}
+        \end{subfigure}
+
+        \medskip
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-windspeed.eps}
+        \end{subfigure}
+        \hspace*{\fill}
+        \begin{subfigure}{.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-summer.eps}
+        \end{subfigure}
+
+        \medskip
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/gam/gam-fall.eps}
+        \end{subfigure}
+        \hspace*{\fill}
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/blank.eps}
+        \end{subfigure}
+
+        \caption{Grafici GAM - 2}\label{fig:gam-1}
+\end{figure}
+
+Come è possibile vedere in queste semplici figure, vengono confermati i
+risultati visti grazie ai modelli precedenti:
+
+\begin{itemize}
+\item \texttt{holiday} era risultata poco significativa nei modelli precedenti
+  e nemmeno in questo caso sembra influenzare significativamente la richiesta del servizio;
+\item sono stati confermati gli effetti rilevati con i modelli precedenti
+  anche per le altre variabili.
+\end{itemize}
+
+In questi grafici compare però qualcosa che ci sorprende:
+
+\begin{itemize}
+\item Stranamente, al peggiorare del tempo (variabile \texttt{weather}),
+  sembra che la richiesta del servizio di \emph{Bike sharing} cresca. \\
+  Questa ``anomalia'' potrebbe essere spiegata dal fatto che a Brooklyn al
+  peggiorare del tempo le metropolitane diventano più affollate e le strade
+  più trafficate, poichè si preferisce utilizzare un mezzo piuttosto che
+  andare a piedi. \\
+  Sembra quindi che, con condizioni metereologiche accettabili, la gente per
+  evitare il traffico o servizi pubblici troppo affollati, preferisca
+  ricorrere al servizio di \emph{Bike sharing} piuttosto che camminare per
+  qualche isolato.
+\item Dalle figure relative alla variabile \texttt{season} pare che il
+  servizio di \emph{Bike sharing} venga utilizzato prevalentemente in inverno,
+  mentre ci si aspetterebbe che venisse utilizzato maggiormente in estate.
+  Tuttavia, facendo qualche ricerca su Internet\footnote{
+  https://weatherspark.com/averages/31081/New-York-United-States e altri siti}
+  sembra che a Brooklyn in estate il tempo non sia particolarmente gradevole:
+  molti lo descrivono come afoso ed è stata trovata una notizia di un ciclista
+  di un TG locale in cui egli denuncia che in estate non si riesce più ad
+  andare in bici poichè le ruote diventano troppo \emph{slippery}, ovvero
+  sdrucciolevoli. \\
+  Questa notizia può sembrare realistica poichè guardando la mappa delle piste
+  ciclabili\footnote{http://www.nycbikemaps.com/maps/brooklyn-bike-map/} molte
+  di queste sono in mezzo a grattacieli ed edifici e solo una piccola parte di
+  questi è adiacente al Brooklyn Botanic Garden.
+\end{itemize}
+
+Per quanto riguarda gli altri risultati ottenuti, sembrano tutti rispecchiare
+alcune previsioni che potrebbero essere ritenute ``comuni'':
+
+\begin{itemize}
+\item Al crescere della temperatura, il servizio viene utilizzato di più (per
+  rinfrescarsi);
+\item Al crescere della velocità del vento, il servizio viene utilizzato di
+  più (ci si rinfresca di più se c'è più vento);
+\item Al crescere dell'umidità, il servizio viene richiesto di meno (è più
+  fastidioso andare in bici con maggiore afosità);
+\item Se è un giorno lavorativo, il servizio viene utilizzato di meno poichè
+  c'è meno gente che fa un giro in bici;
+\item Di notte ci si aspetta che il servizio non venga utilizzato molto, per
+  cui il risultato relativo alle ore rispecchia questa previsione.
+\end{itemize}
