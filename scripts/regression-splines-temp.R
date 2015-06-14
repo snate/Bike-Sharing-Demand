@@ -43,15 +43,16 @@ for (i in nummin:num){
   
   val[i,2] = sum((y.v-predict(m1))^2)
 }
-plot(val[nummin:num,1], val[nummin:num,2],xlab="parametro di lisciamento",ylab="errore 'dati di oggi'")
+plot(val[nummin:num,1], val[nummin:num,2],xlab="Numero di nodi",ylab="Errore")
 print(val[nummin:num,])
 val = na.omit(val)
 bestVal = min(val[,2])
 pos = val[,1][val[,2]==bestVal]
 print(paste("Wow",bestVal,"in position",pos))
+cat("Premere <Enter>"); readline()
 
 #disegno spline con il migliore numero di nodi
-plot(x,y,pch=2,col=2,main="splines di regressione")
+plot(x,y,pch=2,col=2,main="splines di regressione",xlab="temp",ylab="count")
 points(x,y.v,pch=3,col=3)
 xi<-seq(min(x),max(x),length=pos)
 xx<-sort(c(x,xi[2:(length(xi)-1)]))
