@@ -1,11 +1,15 @@
+library(sm)
 #smoothing splines
 indexes = sample(1:length(train$count), size=length(train$count)/2)
 indexes.v = sample(setdiff(1:length(train$count), indexes))
+column = "temp"
 
-x = train$temp
+if(column == "datetime")
+  x = as.numeric(train[column])
+x = train[column]
 str(x)
-x.v = x[indexes.v]
-x = x[indexes]
+x.v = x[indexes.v,column]
+x = x[indexes,column]
 y = log(train$count)
 y.v = y[indexes.v]
 y = y[indexes]
@@ -44,10 +48,7 @@ y.v = med
 s1 <- smooth.spline(x,y)
 lines(s1)
 
-#si provano altri lambda di lisciamento
-s1 <- smooth.spline(x,y,spar=0.9)
-lines(s1)
-cat("premere <cr>"); readline()
+cat("premere <Enter>"); readline()
 
 #si cerca il miglior lambda grazie a X-validation
 nummin <- 1
@@ -59,15 +60,15 @@ for (i in nummin:num){
   s1 <- smooth.spline(x,y,spar=h)
   val[i,2]<-sum((y.v-predict(s1)$y)^2)
 }
-plot(val[nummin:num,1], val[nummin:num,2],xlab="Parametro di lisciamento",ylab="Errore 'dati di oggi'")
+plot(val[nummin:num,1], val[nummin:num,2],xlab="Lambda",ylab="Errore")
 val[nummin:num,]
 val = na.omit(val)
 bestVal = min(val[,2])
 pos = val[,1][val[,2]==bestVal]
 print(paste("Best:",bestVal,"in position",pos))
-cat("premere <cr>"); readline()
+cat("premere <Enter>"); readline()
 
-plot(x_old,y_old,pch=2,col=2,main="Splines di lisciamento")
+plot(x_old,y_old,pch=2,col=2,main="Splines di lisciamento",xlab=column,ylab="Bike sharing request")
 points(x.v,y.v,pch=3,col=3)
 s1 <- smooth.spline(x,y,spar=pos)
 lines(s1)
