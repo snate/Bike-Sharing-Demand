@@ -8,6 +8,8 @@ ancora meglio i dati.
 A tal fine, sono stati provati vari modelli, descritti nelle sottosezioni
 seguenti.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Regressione locale}\label{sec:local-regression}
 Come primo modello non lineare si sceglie di utilizzare la regressione locale,
 servendosi del package \texttt{sm} presente in R.
@@ -53,6 +55,8 @@ grazie allo script \texttt{drawOptimalSM\_temp.R} (sez. \ref{sec:drawSM-temp}):
   \label{fig:sm-draw}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Loess}\label{sec:loess}
 Un metodo molto simile al precedente, sempre di regressione locale, è il
 \emph{loess}.
@@ -87,7 +91,9 @@ dei quadrati dei residui è minima).
   \label{fig:loess-draw}
 \end{figure}
 
-\subsection{Spline di regressione}\label{doc:regression-splines}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Spline di regressione}\label{sec:regression-splines}
 Finora sono stati usati solamente modelli che, lineari o meno, erano costituiti
 da una o più rette di regressione.
 
@@ -115,3 +121,50 @@ possibilità di impostare grado e numero di nodi.
   \caption{Spline di regressione disegnata con il miglior numero di nodi}
   \label{fig:regression-draw}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Spline di lisciamento}\label{sec:smoothing-splines}
+A differenza delle spline di regressione, che agivano sull'intera funzione,
+possiamo anche introdurre un modello di regressione locale non lineare, ovvero
+le \emph{spline di lisciamento}.
+
+In un modo simile a quello visto per le spline di regressione, vengono
+ottenute tante spline, una per ognuno degli intervalli scelti.
+
+In questo caso, gli script utilizzati per ottenere il relativo modello sono
+\texttt{smoothing-splines-temp.R} (sez. \ref{sec:smoothing-splines-temp}) ed
+altri script non riportati perchè sostanzialmente identici a questo.
+
+Tali procedure iterano affinchè non viene trovato il miglior valore di
+$ \lambda $, ovvero il parametro di lisciamento utilizzato per tale modello (
+$ \lambda = 0 \rightarrow $ funzione frastagliata,
+$ \lambda = \infty \rightarrow $ regressione lineare semplice).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/smoothing-splines-error-lambda.eps}
+  \caption{Curva dell'errore in funzione di $ \lambda $}
+  \label{fig:smoothing-optimal-lambda}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/smoothing-spl-draw.eps}
+  \caption{Spline di lisciamento disegnata con il miglior $ \lambda $}
+  \label{fig:smoothing-spline-draw}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{MARS}\label{doc:smoothing-splines}
+Oltre alle tecniche viste nelle sezioni \ref{sec:regression-splines} e
+\ref{sec:smoothing-splines} vi è un ulteriore tecnica che utilizza le spline,
+ovvero MARS (\emph{Multivariate Adaptive Regression Splines}).
+
+Come dice il nome (esteso), grazie a questa tecnica è possibile utilizzare le
+splines di regressione non solo più con un'unica variabile, ma con tutte le
+variabili esplicative del dataset.
+
+Lo script utilizzato per MARS è \texttt{mars.R}, presente in sezione
+\ref{sec:mars-script}.
