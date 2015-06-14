@@ -18,7 +18,7 @@ for(i in 1 : NROW(X)) {
 }
 
 beta = matrix(beta)
-rownames(beta) = c("(Intercept)",columns)
+rownames(beta) = colnames(X)
 
 X11()
 par(mfrow = c(3,1))
