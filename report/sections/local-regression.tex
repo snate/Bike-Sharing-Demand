@@ -86,3 +86,32 @@ dei quadrati dei residui è minima).
   \caption{Curva loess disegnata con il miglior span}
   \label{fig:loess-draw}
 \end{figure}
+
+\subsection{Spline di regressione}\label{doc:regression-splines}
+Finora sono stati usati solamente modelli che, lineari o meno, erano costituiti
+da una o più rette di regressione.
+
+Con le spline si passa a curve che hanno tratti definiti da polinomi di grado
+maggiore al primo: più precisamente, nel nostro caso verranno utilizzate
+spline cubiche (con tratti definiti da polinomi di terzo grado).
+
+Gli script che realizzano queste curve sono \texttt{regression-splines-temp.R}
+(sez. \ref{sec:regression-splines-temp}) ed altri script non riportati perchè
+sostanzialmente identici a questo.
+
+Tali procedure utilizzano il comando \texttt{bs} di R, che genera spline con la
+possibilità di impostare grado e numero di nodi.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/regression-splines-error-knots.eps}
+  \caption{Curva dell'errore in funzione del numero di nodi}
+  \label{fig:regression-optimal-knots}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/regression-draw.eps}
+  \caption{Spline di regressione disegnata con il miglior numero di nodi}
+  \label{fig:regression-draw}
+\end{figure}
