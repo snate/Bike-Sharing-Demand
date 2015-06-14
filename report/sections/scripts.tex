@@ -168,3 +168,125 @@ rm(y)
 rm(indexes)
 rm(beta.storia)
 \end{verbatim}
+
+\subsection{MySM\_temp.R}\label{sec:mySM-temp}
+\begin{verbatim}
+# LOCAL REGRESSION #
+# Load 'sm' library
+library(sm)
+
+# Set 'temp' as covariate and 'count' as response
+x = train$temp
+y = log(train$count)
+
+# Choose h interval
+#interv = 10:100
+#divisions= 10
+#interv = 100:200
+#divisions= 100
+#interv = 1700:2000
+#divisions= 1000
+interv = 18500:19000
+divisions= 10000
+
+# Draw plot in which 'count' is function of 'temp'
+plot(x,y,col=3,pch=3)
+
+# Run several times local regression and store prediction errors
+val = matrix(NA, length(interv),1)
+for (i in interv) {
+  inc = i / divisions
+  sm1 = sm.regression(x,y,h=inc,add=TRUE,ngrid=120,col=2)
+  val[i-min(interv)] = sum((y[1:120]-sm1$estimate)^2)
+}
+
+# Draw errors as a function of h values
+plot((interv)/divisions,val)
+
+# Find best h
+val = val[1:(length(val)-1)]
+i = which(val == min(val))
+optimal_h = interv[i]/divisions
+
+# Clean workspace (but keep best h)
+rm(divisions)
+rm(i)
+rm(inc)
+rm(interv)
+rm(sm1)
+rm(x)
+rm(val)
+rm(y)
+\end{verbatim}
+
+\subsection{drawOptimalSM\_temp.R}\label{sec:drawSM-temp}
+\begin{verbatim}
+# DRAW LOCAL REGRESSION #
+# Set 'temp' as covariate and 'count' as response
+x = train$temp
+y = log(train$count)
+
+# Draw local regression with optimal h
+plot(x,y,col=3,pch=3)
+sm1 = sm.regression(x,y,h=optimal_h,add=TRUE,ngrid=120,col=2)
+
+# Clean workspace
+rm(x)
+rm(y)
+\end{verbatim}
+
+\subsection{loess\_temp.R}\label{sec:loess-temp}
+\begin{verbatim}
+# LOESS #
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+column = "temp"
+
+# Get actual training & test set
+x = train[column]
+x.v = x[indexes.v,column]
+x = x[indexes,column]
+y = log(train$count)
+y.v = y[indexes.v]
+y = y[indexes]
+
+# Find best span by cross validation
+nummin = 1
+num = 10
+val = matrix(NA,num,2)
+for(i in nummin:num) {
+  k=i/10
+  val[i,1] = k
+  lo1 = loess(y~x,span=k)
+  val[i,2] = sum((y.v-predict(lo1))^2)
+}
+
+# Show error as a function of span
+plot(val[nummin:num,1],val[nummin:num,2],xlab="Span",ylab="Errore")
+print(val[nummin:num,])
+optimal_span = min(val[,2])
+optimal_span = val[,1][val[,2] == optimal_span]
+print(paste("Optimal span is",optimal_span))
+cat("premere <Enter>"); readline()
+
+# Draw loess with best span
+lo1 <- loess.smooth(x,y,span=optimal_span)
+plot(x,y,pch=2,col=2,main="loess")
+points(x,y.v,pch=3,col=3)
+lines(lo1)
+
+# Clean workspace
+rm(i)
+rm(indexes)
+rm(indexes.v)
+rm(h)
+rm(lo1)
+rm(num)
+rm(nummin)
+rm(val)
+rm(x)
+rm(x.v)
+rm(y)
+rm(y.v)
+\end{verbatim}
