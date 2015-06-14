@@ -49,7 +49,7 @@ lines(s1)
 #si provano altri lambda di lisciamento
 s1 <- smooth.spline(x,y,spar=0.9)
 lines(s1)
-cat("premere <cr>"); readline()
+cat("premere <Enter>"); readline()
 
 #si cerca il miglior lambda grazie a X-validation
 nummin <- 1
@@ -67,7 +67,7 @@ val = na.omit(val)
 bestVal = min(val[,2])
 pos = val[,1][val[,2]==bestVal]
 print(paste("Best:",bestVal,"in position",pos))
-cat("premere <cr>"); readline()
+cat("premere <Enter>"); readline()
 
 plot(x_old,y_old,pch=2,col=2,main="Splines di lisciamento")
 points(x.v,y.v,pch=3,col=3)

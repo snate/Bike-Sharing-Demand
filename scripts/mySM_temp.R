@@ -1,6 +1,7 @@
 library(sm)
 x = train$temp
 y = log(train$count)
+
 #interv = 10:100
 #divisions= 10
 #interv = 100:200
