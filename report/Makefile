@@ -12,7 +12,9 @@ clean:
 	rm -f *.out
 	rm -f *.log
 	rm -f *.pdf
+	rm -f images/*.pdf
 	rm -f images/lm/*.pdf
 	rm -f images/non-linear/*.pdf
+	rm -f images/non-linear/gam/*.pdf
 	rm -f sections/*.aux
 	
