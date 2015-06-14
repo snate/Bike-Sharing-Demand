@@ -382,3 +382,154 @@ rm(xx)
 rm(y)
 rm(y.v)
 \end{verbatim}
+
+\subsection{smoothing-splines-temp.R}\label{sec:smoothing-splines-temp}
+\begin{verbatim}
+# SMOOTHING SPLINES #
+# Load 'sm' library
+library(sm)
+
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+column = "temp"
+
+# Get actual training & test set
+if(column == "datetime")
+  x = as.numeric(train[column])
+x = train[column]
+str(x)
+x.v = x[indexes.v,column]
+x = x[indexes,column]
+y = log(train$count)
+y.v = y[indexes.v]
+y = y[indexes]
+
+# Plot training (red) & test (green) set
+plot(x,y,pch=2,col=2,main="Splines di lisciamento")
+points(x,y.v,pch=3,col=3)
+
+# Create a dataset in which means of response variable respective to
+# covariates are stored
+myFrame = data.frame(x,y)
+levs = unique(x)
+med = rep(0,length(levs))
+i = 0
+for(l in levs) {
+  i = i + 1
+  cnt = length(with(myFrame, y[x==l]))
+  med[i] = sum(with(myFrame, y[x==l])) / cnt
+}
+
+# Save old x & y
+x_old = x
+y_old = y
+x = levs;
+y = med;
+
+# Same thing for test set
+myFrame = data.frame(x.v,y.v)
+levs = unique(x.v)
+med = rep(0,length(levs))
+i = 0
+for(l in levs) {
+  i = i + 1
+  cnt = length(with(myFrame, y.v[x.v==l]))
+  med[i] = sum(with(myFrame, y.v[x.v==l])) / cnt
+}
+
+# Same as above
+x.v = levs
+y.v = med
+
+# Draw a first spline, without specifying lambda
+s1 <- smooth.spline(x,y)
+lines(s1)
+cat("premere <Enter>"); readline()
+
+# Find best lambda by X-validation
+nummin <- 1
+num <- 100
+val <- matrix(NA,num,2)
+for (i in nummin:num){
+  h=i/100
+  val[i,1]<-h
+  s1 <- smooth.spline(x,y,spar=h)
+  val[i,2]<-sum((y.v-predict(s1)$y)^2)
+}
+
+# Plot error as a function of lambda and save best lambda
+plot(val[nummin:num,1], val[nummin:num,2],xlab="Lambda",ylab="Errore")
+val[nummin:num,]
+val = na.omit(val)
+bestVal = min(val[,2])
+pos = val[,1][val[,2]==bestVal]
+print(paste("Best:",bestVal,"in position",pos))
+cat("premere <Enter>"); readline()
+
+# Plot smoothing splines with best lambda
+plot(x_old,y_old,pch=2,col=2,main="Splines di lisciamento",xlab=column,ylab="Bike sharing request")
+points(x.v,y.v,pch=3,col=3)
+s1 <- smooth.spline(x,y,spar=pos)
+lines(s1)
+
+# Clean workspace
+rm(bestVal)
+rm(cnt)
+rm(h)
+rm(i)
+rm(indexes)
+rm(indexes.v)
+rm(l)
+rm(levs)
+rm(med)
+rm(myFrame)
+rm(num)
+rm(nummin)
+rm(pos)
+rm(s1)
+rm(val)
+rm(x)
+rm(x_old)
+rm(x.v)
+rm(y)
+rm(y_old)
+rm(y.v)
+\end{verbatim}
+
+\subsection{mars.R}\label{sec:mars-script}
+\begin{verbatim}
+# MARS #
+# Load 'polspline' library
+library(polspline)
+
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+
+# Get actual training & test set
+x = train[columns]
+y = train$count
+x.v = x[indexes.v,]
+x = x[indexes,]
+y = log(train$count)
+y.v = y[indexes.v]
+y = y[indexes]
+
+# Request MARS model
+mars<-polymars(y,x)
+
+# Predict response variable on test set and draw lift-roc plots
+p6 = predict(mars,x.v)
+a6<- lift.roc(p6, y.v, type="crude")
+
+# Clean workspace
+rm(a6)
+rm(p6)
+rm(indexes)
+rm(indexes.v)
+rm(x)
+rm(x.v)
+rm(y)
+rm(y.v)
+\end{verbatim}
