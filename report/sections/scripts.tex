@@ -575,3 +575,97 @@ rm(x.v)
 rm(y)
 rm(y.v)
 \end{verbatim}
+
+\subsection{ppr.R}\label{sec:ppr-script}
+\begin{verbatim}
+# PROJECTION PURSUIT REGRESSION #
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+
+# Get actual training & test set
+x = train[columns]
+x$datetime = as.numeric(x$datetime)
+y = train$count
+x.v = x[indexes.v,]
+x = x[indexes,]
+y = log(train$count)
+y.v = y[indexes.v]
+y = y[indexes]
+
+# Set upper bound for iterations on PPR
+UB = 20
+errors = rep(0,UB)
+
+# Iterate by changing # of projections value
+for(k in 1:UB) {
+  ppr1 = ppr(y ~ ., data=x, nterms = k)
+  mppr1 = pmax(predict(ppr1,newdata=x.v), .5)
+  pPPR = predict(ppr1,newdata=x.v,type="response")
+  errors[k] = sum((y.v-pPPR)^2)
+  print(paste("Done PPR with k = ", k, "-- error: ", errors[k]))
+}
+
+# Find and plot best k value
+bestK = which.min(errors)
+print(paste("Index ", bestK, " has best error: ",errors[bestK]))
+plot(1:UB, errors, xlab = "k", ylab="Errore")
+cat("press <Enter>"); readline()
+
+# Get best PPR
+ppr1 = ppr(y ~ ., data=x, nterms = bestK)
+pPPR = predict(ppr1,newdata=x.v,type="response")
+
+# Plot lift-roc for best PPR
+aPPR = lift.roc(pPPR, y.v, type="crude")
+
+# Clean workspace
+rm(aPPR)
+rm(bestK)
+rm(errors)
+rm(indexes)
+rm(indexes.v)
+rm(k)
+rm(mppr1)
+rm(pPPR)
+#rm(ppr1)
+rm(UB)
+rm(x)
+rm(x.v)
+rm(y)
+rm(y.v)
+\end{verbatim}
+
+\subsection{neural-network.R}\label{sec:nnet-script}
+\begin{verbatim}
+# RETI NEURALI #
+# Load 'nnet' library
+library(nnet)
+
+# Store formula that will be used to compute the neural network
+Fnet = as.formula(paste("count~",paste(names(train[-c(10:12)]), collapse="+")))
+
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2 + 1)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+
+# Get actual training & test set
+x = train[c(columns,"count")]
+x$datetime = as.numeric(x$datetime)
+x.v = x[indexes.v,]
+x = x[indexes,]
+
+# Try to converge with 100 iterations and get predicted values
+n1 = nnet(Fnet, data = x, decay = 0.0016, size = 5, maxit = 100)
+pNN = predict(n1, newdata = x.v)
+
+# Plot lift-roc for best PPR
+lift.roc(pNN,x$count,type="crude")
+
+# Clean workspace
+rm(Fnet)
+rm(indexes)
+rm(indexes.v)
+rm(x)
+rm(x.v)
+\end{verbatim}
