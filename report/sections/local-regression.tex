@@ -297,3 +297,71 @@ alcune previsioni che potrebbero essere ritenute ``comuni'':
 \item Di notte ci si aspetta che il servizio non venga utilizzato molto, per
   cui il risultato relativo alle ore rispecchia questa previsione.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Projection Pursuit Regression}\label{sec:ppr}
+Un altro possibile modello è la \emph{Projection Pursuit Regression}, in cui i
+parametri da determinare sono i vettori di proiezione.
+
+In questo modello bisogna ricercare il numero migliore di proiezioni da
+utilizzare. Fortunatamente, questo è abbastanza semplice da trovare tramite
+iterazioni assegnando a questo numero valori da 1 a un limite superiore
+finchè, calcolando lo squarto quadratico, non si trova un minimo: l'andamento
+dell'errore infatti è assimilabile ad una funzione che decresce, toccando un
+minimo, per poi crescere nuovamente e stabilizzarsi asintoticamente.
+
+Con lo script \texttt{ppr.R} (sez. \ref{sec:ppr-script}) si è notato che basta
+iterare al massimo venti volte per arrivare a convergenza con il nostro
+dataset.
+
+\begin{figure}[H]
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/ppr-error-plot.eps}
+        \end{subfigure}
+        \hspace*{\fill}
+        \begin{subfigure}{0.4\textwidth}
+          \includegraphics[width=\columnwidth]{images/non-linear/ppr-error-data.eps}
+        \end{subfigure}
+
+        \caption{Errore con PPR}\label{fig:ppr-error}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/ppr-result.eps}
+  \caption{Project Pursuit Regression con il miglior numero di proiezioni}
+  \label{fig:ppr-result}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Reti neurali}\label{sec:neural-nets}
+Un altro modello provato per spiegare i nostri dati sono le reti neurali, le
+quali hanno l'interessante caratteristica di poter approssimare bene qualsiasi
+funzione continua semplicemente aumentando il numero di nodi nello strato
+latente.
+
+Naturalmente per utilizzare le reti neurali le funzioni di attivazione non sono
+entrambi lineari, altrimenti il tutto si sarebbe ridotto a quanto già visto
+nella sezione \ref{sec:linear-model} e nelle relative sottosezioni.
+
+Lo script che si occupa di individuare una rete neurale adatta al nostro
+dataset è \texttt{neural-network.R} (sez. \ref{sec:nnet-script}), il quale
+fa iterare 100 volte (facendo girare lo script, è stato notato che è un numero
+sufficiente grande) per arrivare a convergenza. Per il parametro \emph{decay}
+è stato utilizzato 0.0016.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/nnet-progress.eps}
+  \caption{Convergenza durante il calcolo della rete neurale}
+  \label{fig:nnet-progress}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/neural-network.eps}
+  \caption{Rete neurale finale}
+  \label{fig:nnet}
+\end{figure}
