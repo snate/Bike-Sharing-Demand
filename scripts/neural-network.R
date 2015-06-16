@@ -16,7 +16,7 @@ pNN = predict(n1, newdata = x.v)
 #tabella.sommario(pNN,x.v$count)
 lift.roc(pNN,x$count,type="crude")
 
-rm(Fnet)
+#rm(Fnet)
 rm(indexes)
 rm(indexes.v)
 rm(x)
