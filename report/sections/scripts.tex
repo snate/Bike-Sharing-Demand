@@ -669,3 +669,55 @@ rm(indexes.v)
 rm(x)
 rm(x.v)
 \end{verbatim}
+
+\subsection{tree.R}\label{sec:tree-script}
+\begin{verbatim}
+# ALBERI DI REGRESSIONE #
+# Load 'tree' library
+library(tree)
+
+# Store formula that will be used to find the regression tree
+Ftree = as.formula(paste("count~",paste(names(train[-c(10:12)]), collapse="+")))
+
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2 + 1)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+
+# Get actual training & test set
+x = train[c(columns,"count")]
+x$datetime = as.numeric(x$datetime)
+y = train$count
+x.v = x[indexes.v,]
+x = x[indexes,]
+parte1 = sample(1:NROW(x),length(indexes)/2)
+parte2 = setdiff(1:NROW(x),parte1)
+
+# Create complete tree w/ deviance threshold = .02
+t1 = tree(Ftree, data= x[parte1,], control = tree.control(nobs=length(parte1),minsize=2, mindev = 0.02))  # fino alle foglie
+plot(t1)
+text(t1)
+cat("press <Enter>"); readline()
+
+# Fathom the tree in all the possible ways
+t2 = prune.tree(t1, newdata = x[parte2,])
+plot(t2)
+cat("press <Enter>"); readline()
+
+# Find best pruning and then fathom the tree to that size
+J = t2$size[t2$dev == min(t2$dev)]
+t3 = prune.tree(t1, best=J)
+plot(t3)
+text(t3)
+
+# Clean workspace
+rm(Ftree)
+rm(indexes)
+rm(indexes.v)
+rm(parte1)
+rm(parte2)
+rm(t1)
+rm(t2)
+rm(x)
+rm(x.v)
+rm(y)
+\end{verbatim}
