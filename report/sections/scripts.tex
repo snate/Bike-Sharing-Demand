@@ -500,8 +500,11 @@ rm(y.v)
 \subsection{mars.R}\label{sec:mars-script}
 \begin{verbatim}
 # MARS #
-# Load 'polspline' library
-library(polspline)
+# Load library 'earth'
+library(earth)
+
+# Store formula that will be used to compute the MARS model
+Fmars = as.formula(paste("y~",paste(names(train[-c(10:12)]), collapse="+")))
 
 # Get indexes for training & test set
 indexes = sample(1:length(train$count), size=length(train$count)/2)
@@ -509,19 +512,23 @@ indexes.v = sample(setdiff(1:length(train$count), indexes))
 
 # Get actual training & test set
 x = train[columns]
-y = train$count
+y = log(train$count)
 x.v = x[indexes.v,]
 x = x[indexes,]
-y = log(train$count)
 y.v = y[indexes.v]
 y = y[indexes]
 
-# Request MARS model
-mars<-polymars(y,x)
+# Find MARS model and plot relative graphs
+mars = earth(Fmars,data=x)
+plot(mars)
+cat("press <Enter>"); readline()
+evimp(mars)
+plot(evimp(mars))
+cat("press <Enter>"); readline()
 
-# Predict response variable on test set and draw lift-roc plots
+# Lift-roc
 p6 = predict(mars,x.v)
-a6<- lift.roc(p6, y.v, type="crude")
+a6 = lift.roc(p6, y.v, type="crude")
 
 # Clean workspace
 rm(a6)
@@ -643,7 +650,7 @@ rm(y.v)
 library(nnet)
 
 # Store formula that will be used to compute the neural network
-Fnet = as.formula(paste("count~",paste(names(train[-c(10:12)]), collapse="+")))
+Fnet = as.formula(paste("log(count)~",paste(names(train[-c(10:12)]), collapse="+")))
 
 # Get indexes for training & test set
 indexes = sample(1:length(train$count), size=length(train$count)/2 + 1)
@@ -677,7 +684,7 @@ rm(x.v)
 library(tree)
 
 # Store formula that will be used to find the regression tree
-Ftree = as.formula(paste("count~",paste(names(train[-c(10:12)]), collapse="+")))
+Ftree = as.formula(paste("log(count)~",paste(names(train[-c(10:12)]), collapse="+")))
 
 # Get indexes for training & test set
 indexes = sample(1:length(train$count), size=length(train$count)/2 + 1)
