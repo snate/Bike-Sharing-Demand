@@ -1,5 +1,5 @@
 library(tree)
-Ftree = as.formula(paste("count~",paste(names(train[-c(10:12)]), collapse="+")))
+Ftree = as.formula(paste("log(count)~",paste(names(train[-c(10:12)]), collapse="+")))
 indexes = sample(1:length(train$count), size=length(train$count)/2 + 1)
 indexes.v = sample(setdiff(1:length(train$count), indexes))
 
