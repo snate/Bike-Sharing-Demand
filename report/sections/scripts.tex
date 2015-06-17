@@ -42,9 +42,6 @@ columns = colnames(test)
 MAX_P_DEGREE = 30
 F1 = as.formula(paste("log(train$count)~",paste(names(train[-c(10:12)]), collapse="+")))
 
-# LIFT-ROC # Import lift-roc script
-source("scripts/lift-roc1.R")
-
 \end{verbatim}
 
 \subsection{linearModel.R}\label{sec:script-linear-model}
@@ -526,13 +523,7 @@ evimp(mars)
 plot(evimp(mars))
 cat("press <Enter>"); readline()
 
-# Lift-roc
-p6 = predict(mars,x.v)
-a6 = lift.roc(p6, y.v, type="crude")
-
 # Clean workspace
-rm(a6)
-rm(p6)
 rm(indexes)
 rm(indexes.v)
 rm(x)
@@ -567,16 +558,10 @@ gam1 <-  gam(Fgam, family=gaussian, data=x)
 summary(gam1)
 plot(gam1, ask=T)
 
-# Predict response variable on test set and draw lift-roc plots
-p8 <- predict(gam1,newdata=x.v,type="response")
-a8<- lift.roc(p8, y.v, type="crude")
-
 # Clean workspace
-rm(a8)
 rm(Fgam)
 rm(indexes)
 rm(indexes.v)
-rm(p8)
 rm(x)
 rm(x.v)
 rm(y)
@@ -623,11 +608,7 @@ cat("press <Enter>"); readline()
 ppr1 = ppr(y ~ ., data=x, nterms = bestK)
 pPPR = predict(ppr1,newdata=x.v,type="response")
 
-# Plot lift-roc for best PPR
-aPPR = lift.roc(pPPR, y.v, type="crude")
-
 # Clean workspace
-rm(aPPR)
 rm(bestK)
 rm(errors)
 rm(indexes)
@@ -666,8 +647,6 @@ x = x[indexes,]
 n1 = nnet(Fnet, data = x, decay = 0.0016, size = 5, maxit = 100)
 pNN = predict(n1, newdata = x.v)
 
-# Plot lift-roc for best PPR
-lift.roc(pNN,x$count,type="crude")
 
 # Clean workspace
 rm(Fnet)
