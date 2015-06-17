@@ -166,8 +166,32 @@ Come dice il nome (esteso), grazie a questa tecnica è possibile utilizzare le
 splines di regressione non solo più con un'unica variabile, ma con tutte le
 variabili esplicative del dataset.
 
-Lo script utilizzato per MARS è \texttt{mars.R}, presente in sezione
-\ref{sec:mars-script}.
+Lo script utilizzato per MARS è \texttt{mars.R} presente in sezione
+\ref{sec:mars-script}, il quale utilizza la libreria \emph{earth} di R.
+
+Di seguito sono riportati i grafici per:
+
+\begin{enumerate}
+\item Avere una visione d'insieme del modello ottenuto, nella quale è mostrato
+  l'andamento di R\textsuperscript{2} al crescere dei predittori, un qqplot e
+  un grafico dei residui del modello finale;
+\item Un grafico dove è possibile vedere le variabili ordinate per importanza,
+  con relativo andamento dello scarto quadratico.
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/mars-general.eps}
+  \caption{Visione d'insieme del modello MARS}
+  \label{fig:tree-1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\columnwidth]{images/non-linear/mars-variables.eps}
+  \caption{Variabili ordinate per importanza in MARS}
+  \label{fig:tree-2}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -382,8 +406,9 @@ Nel nostro caso ci aspettiamo che la variabile \texttt{datetime} divida i
 livelli di richiesta del \emph{Bike sharing} in giorno e notte, siccome ci
 si aspetta che di notte non vi sia molta gente che si sposta in bicicletta.
 
-Per sviluppare l'albero di regressione si utilizza lo script \texttt{tree.R},
-che a sua volta agisce principalmente in tre step:
+Per sviluppare l'albero di regressione si utilizza lo script \texttt{tree.R}
+(sezione \ref{sec:tree-script}), che a sua volta agisce principalmente in tre
+step:
 
 \begin{enumerate}
 \item L'albero viene fatto crescere completamente, tuttavia limitando la sua
@@ -421,6 +446,4 @@ quanto riguarda la richiesta del servizio di \emph{Bike sharing}.
 Quanto si vede conferma un'ulteriore volta quanto previsto nella sezione
 \ref{sec:modlin-work-espl} e ribadito nelle seguenti sezioni, ovvero che ci si
 aspetta che il servizio sia richiesto soprattutto nelle ore di luce del
-giorno e molto meno di notte. Altri fattori importanti sono la temperatura,
-poichè è gradevole andare in bici se fa caldo, e l'umidità, che come visto in
-sezione \ref{sec:gam} sembra un problema abbastanza sentito a Brooklyn.
+giorno e molto meno di notte.
