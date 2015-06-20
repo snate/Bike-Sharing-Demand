@@ -2,9 +2,10 @@
 # Load library 'earth'
 library(earth)
 
-library(polspline)
+# Find MARS model and predict values
 mars2 = earth(F1,data=x)
-p6 = predict(mars2,x.v)
+pMARS = predict(mars2,x.v)
 
-tabella.sommario(p6>0.5, y.v)
-a6<- lift.roc(p6, aLotRegisteredAsNumber, type="crude")
+# Draw classification results
+tabella.sommario(pMARS>0.5, y.v)
+aMARS = lift.roc(pMARS, aLotCasualAsNumber, type="crude")
