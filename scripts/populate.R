@@ -1,3 +1,5 @@
+rm(list = ls())
+
 # read tables
 test = read.csv(file="data/test.csv")
 test$datetime = as.POSIXct(test$datetime)
@@ -35,6 +37,6 @@ train$datetime = factor(train$datetime)
 FWD_SW_THRESHOLD = 0.1
 MAX_P_DEGREE = 30
 columns = colnames(test)
-F1 = as.formula(paste("log(train$count)~",paste(names(train[-c(10:12)]), collapse="+")))
+F1 = as.formula(paste("log(y)~",paste(names(train[-c(10:12)]), collapse="+")))
 
 source("scripts/lift-roc1.R")
