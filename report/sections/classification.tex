@@ -1,0 +1,86 @@
+\section{Confronto tra modelli}\label{sec:models-comparing}
+
+\subsection{Un nuovo caso di studio}
+
+Si vuole ora passare a un problema di tipo diverso da quello dichiarato in
+sezione \ref{sec:intro-abstract}.
+
+Se prima il problema era determinare la richiesta del servizio di \emph{Bike
+sharing}, ora ci si concentra su una delle due variabili risposta che finora
+sono state ignorate (cfr. sez. \ref{sec:lin-risp}).
+
+In particolare, si vuole capire in quali condizioni gli utenti non registrati
+utilizzano maggiormente il servizio. Nella figura seguente è mostrato un
+boxplot che mostra l'utilizzo del servizio di \emph{Bike sharing} da parte di
+utenti non registrati presente nei dati a nostra disposizione.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\columnwidth]{images/class/boxplot-casual.eps}
+  \caption{Boxplot per \texttt{train\$casual}}
+  \label{fig:simplest-linear-model}
+\end{figure}
+
+Come si può vedere in figura, i dati sono molto concentrati verso valori bassi
+di utilizzo (con mediana 18, trovata con il comando \texttt{summary} di R).
+Guardando il boxplot, si sceglie 50 come soglia per distinguere se l'utilizzo
+è elevato o meno\footnote{N.B. la soglia è puramente arbitraria}.
+
+A questo punto si procede inserendo nel nostro workspace una variabile
+``\texttt{aLotCasual}'' che avrà valori 1 o 0 a seconda che il servizio sia
+stato utilizzato abbondantemente o meno da utenti non registrati (script
+\ref{sec:script-populate-class}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Regressione lineare logistica}\label{sec:class-log-reg}
+
+Come al solito, si parte sempre tentando di approssimare i nostri dati nel
+modo più semplice possibile, ovvero con una retta.
+
+In questo caso però è più conveniente utilizzare, anzichè la regressione
+lineare semplice, quella logistica: in questo modo tutti i valori che verranno
+predetti dal nostro modelli saranno compresi tra 0 e 1.
+
+Si procede con questo metodo grazie allo script \texttt{logistic-regression.R}
+(sez. \ref{sec:script-log-reg}), il quale mostra anche la tabella di errata
+classificazione, le curve Lift e ROC.
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-log-reg.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-log-reg.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con regressione logistica}
+  \label{fig:class-reg-1og}
+\end{figure}
+
+Analizzando il modello ottenuto, è possibile vedere che i fattori che più
+influenzano il nostro nuovo caso di studio sono:
+
+\begin{itemize}
+\item \texttt{workingday}: come è normale aspettarsi, è la più significativa.\\
+  Il numero di volte che il servizio è stato utilizzato in giorni lavorativi
+  da utenti non registrati cala, poichè ci si aspetta che la maggior parte
+  degli utenti casuali non risieda in Brooklyn;
+\item \texttt{humidity}, al cui crescere il servizio è meno utilizzato spesso
+  da utenti non registrati. \\
+  Tale risultato può sembrare sensato, poichè anche nelle precedenti sezioni
+  abbiamo visto che all'aumentare della temperatura il servizio veniva
+  utilizzato di meno in generale nell'afosa Brooklyn;
+\item \texttt{temp}: al crescere della temperatura, il servizio viene in
+  generale utilizzato maggiormente e tale trend viene confermato;
+\item \texttt{atemp}: come per \texttt{temp};
+\item \texttt{weather}: al peggiorare delle condizioni metereologiche, il
+  servizio viene utilizzato di meno da utenti non registrati. \\
+  Anche questo pare sensato, poichè con condizioni metereologiche ci si
+  aspetta che sia l'afflusso di turisti (i principali presupposti utenti non
+  registrati) a diminuire.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

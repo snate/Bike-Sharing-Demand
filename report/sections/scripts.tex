@@ -707,3 +707,55 @@ rm(x)
 rm(x.v)
 rm(y)
 \end{verbatim}
+
+\subsection{populateForClassification.R}\label{sec:script-populate-class}
+\begin{verbatim}
+# Call populate script
+source("scripts/populate.R")
+
+# Init new variable in train set as an array of 0s
+train$aLotCasual = rep(0, length(train$registered))
+
+# Set this variable slots as 1 if casual bike sharing demand is high
+for(i in 1:length(train$registered)) {
+  if(train$casual[i] > 50)
+    train$aLotCasual[i] = 1
+}
+
+# Use this variable both as factor (qualitative) and numeric (quantitative)
+train$aLotCasual = as.factor(train$aLotCasual)
+aLotCasualAsNumber = as.numeric(train$aLotCasual == 1)
+
+# Get indexes for training & test set
+indexes = sample(1:length(train$count), size=length(train$count)/2)
+indexes.v = sample(setdiff(1:length(train$count), indexes))
+
+# Get actual training & test set
+x = train[columns]
+y = train$aLotCasual
+x.v = x[indexes.v,]
+x = x[indexes,]
+y.v = y[indexes.v]
+y = y[indexes]
+
+# Formula for this classification: is high casual BS demand dependent from
+# esplicative variables?
+F1 = as.formula(paste("y~",paste(names(train[-c(10:12,15)]), collapse="+")))
+\end{verbatim}
+
+\subsection{logistic-regression.R}\label{sec:script-log-reg}
+\begin{verbatim}
+# LOGISTIC REGRESSION #
+
+#-----------------------------------------------
+# Regressione lineare logistica - (aLogistic)
+#-----------------------------------------------
+#
+
+mLogistic =  glm(F1, family=binomial, data=x)
+mLogistic = step(mLogistic, direction = "both")
+pLogistic = predict(mLogistic, newdata=x.v, type="response")
+
+tabella.sommario(pLogistic>0.5,y.v)
+aLogistic <- lift.roc(pLogistic, aLotCasualAsNumber, type="crude")
+\end{verbatim}
