@@ -129,7 +129,7 @@ nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
     \includegraphics[width=\columnwidth]{images/class/roc-mars.eps}
   \end{subfigure}
   \caption{Curve per classificazione con MARS}
-  \label{fig:class-reg-1og}
+  \label{fig:class-mars}
 \end{figure}
 
 Richiedendo il grafico delle variabili più importanti per questo modello
@@ -170,19 +170,15 @@ nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
     \includegraphics[width=\columnwidth]{images/class/roc-gam.eps}
   \end{subfigure}
   \caption{Curve per classificazione con GAM}
-  \label{fig:class-reg-1og}
+  \label{fig:class-gam}
 \end{figure}
 
 Come nella sezione \ref{sec:class-mars}, le variabili più significative sono
 \texttt{temp} e \texttt{workingday}.
 
-Tuttavia, dal grafico di questo modello se un giorno è lavorativo, la
-richiesta del servizio da parte di utenti non registrati cala, mentre
-all'aumentare della temperatura la richiesta cresce. \\
-Si ritiene che ciò sia dovuto al fatto che il più delle volte la temperatura è
-sufficiente da sola per determinare una richiesta alta di \emph{Bike sharing}
-da parte di qualsiasi tipo di utente e che in questo caso le altre variabili
-agiscano per ``bilanciare'' l'effetto della temperatura.
+Anche in questo caso, dal grafico di questo modello si evince che se un giorno
+è lavorativo, la richiesta del servizio da parte di utenti non registrati
+cala, mentre all'aumentare della temperatura la richiesta cresce.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -219,7 +215,7 @@ nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
     \includegraphics[width=\columnwidth]{images/class/roc-nnet.eps}
   \end{subfigure}
   \caption{Curve per classificazione con rete neurale}
-  \label{fig:class-reg-1og}
+  \label{fig:class-nnet}
 \end{figure}
 
 Come è possibile vedere dalla figura \ref{fig:nnet} (per questo modello non
@@ -230,9 +226,9 @@ solamente le curve Lift e ROC.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Reti neurali}\label{sec:class-nnet}
+\subsection{Alberi di classificazione}\label{sec:class-tree}
 
-L'ultimo modello utilizzato è un albero di regressione.
+L'ultimo modello utilizzato è un albero di classificazione.
 
 Pure in questo caso cambia poco da quanto già detto in sezione
 \ref{sec:trees}, lo script utilizzato è \texttt{tree-classif.R} (sezione
@@ -247,7 +243,7 @@ nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
     0 & 3755 & 238 \\ \hline
     1 & 345 & 1105 \\ \hline
 \end{tabular}
-  \caption{Tabella di errata classificazione per albero di regressione}
+  \caption{Tabella di errata classificazione per albero di classificazione}
 \end{center}
 \end{table}
 
@@ -259,11 +255,38 @@ nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
   \begin{subfigure}{0.4\textwidth}
     \includegraphics[width=\columnwidth]{images/class/roc-tree.eps}
   \end{subfigure}
-  \caption{Curve per classificazione con albero di regressione}
-  \label{fig:class-reg-1og}
+  \caption{Curve per classificazione con albero di classificazione}
+  \label{fig:class-tree}
 \end{figure}
 
-Come è possibile vedere dalla figura \ref{fig:nnet} (per questo modello non
-viene riportata la rete neurale finale), le reti neurali non sono facili da
-interpretare, quindi per valutarne l'efficacia utilizzeremo in seguito
-solamente le curve Lift e ROC.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\columnwidth]{images/class/final-tree.eps}
+  \caption{Albero di classificazione}
+  \label{fig:final-class-tree}
+\end{figure}
+
+Come in sezione \ref{sec:trees}, la dicotomia più forte per spiegare i dati è
+ancora contenuta nella variabile \texttt{datetime}, decisamente determinante
+per dire che il servizio di \emph{Bike sharing} è utilizzato maggiormente di
+giorno (1) che di notte (0).
+
+Guardando più attentamente le foglie dell'albero, si vedono nuovamente le
+relazioni evidenziate nelle precedenti sottosezioni di questa sezione:
+
+\begin{itemize}
+\item Se fa freddo, il servizio è poco utilizzato;
+\item A parità di condizioni, se il giorno non è lavorativo è più probabile
+  che venga utilizzato. Analizziamo dunque i due sottoalberi che partono dalla
+  condizione \emph{\texttt{atemp} $ < $ 29.925}. \\
+  Nel sottoalbero sulla destra il servizio è utilizzato abbondantemente pure
+  di notte se il giorno non è lavorativo. Si noti che tale ramo è figlio della
+  condizione che faccia caldo, quindi molti di quei giorni potrebbero essere
+  giorni estivi di vacanza. \\
+  Nel sottoalbero di sinistra, il servizio è utilizzato poco se il giorno è
+  lavorativo, mentre è utilizzato abbondantemente nelle ore diurne. Ci si può
+  spiegare tale risultato con il fatto che se siamo nel ramo sinistro non
+  siamo nelle stagioni più calde, quindi anche se la temperatura è sopra i
+  14,35$^{\circ}$C le condizioni atmosferiche sono comunque maggiormente
+  ostiche in confronto a quelle del sottoalbero destro.
+\end{itemize}
