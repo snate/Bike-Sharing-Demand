@@ -96,3 +96,42 @@ influenzano il nostro nuovo caso di studio sono:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{MARS}\label{sec:class-mars}
+
+Come secondo tentativo, decidiamo di utilizzare un modello che avevamo già
+utilizzato per predire la richiesta del servizio di \emph{Bike sharing} nelle
+sezioni precedenti, ovvero MARS.
+
+In questo caso cambia poco da quanto già detto in sezione \ref{sec:mars}, lo
+script utilizzato è \texttt{mars-classif.R} (sezione
+\ref{sec:script-mars-classif}) e anche questo usa gli stessi strumenti visti
+nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l || c | c | }
+  \hline
+    Previsti/Osservati & 0 & 1 \\ \hline \hline
+    0 & 3907 & 384 \\ \hline
+    1 & 211 & 941 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per regressione logistica}
+\end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-mars.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-mars.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con MARS}
+  \label{fig:class-reg-1og}
+\end{figure}
+
+Richiedendo il grafico delle variabili più importanti per questo modello
+(trovate con il comando \texttt{evimp}), \texttt{temp} e \texttt{workingday}
+si confermano le più importanti per questo particolare caso di studio.
