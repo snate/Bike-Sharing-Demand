@@ -772,7 +772,7 @@ tabella.sommario(pMARS>0.5, y.v)
 aMARS = lift.roc(pMARS, aLotCasualAsNumber, type="crude")
 \end{verbatim}
 
-\subsection{mars-classif.R}\label{sec:script-gam-classif}
+\subsection{gam-classif.R}\label{sec:script-gam-classif}
 \begin{verbatim}
 # GAM - CLASSIFICATION #
 # Load library 'gam'
@@ -782,7 +782,6 @@ library(gam)
 gam2 =  gam(F1, family=binomial, data=x)
 pGAM = predict(gam2,newdata=x.v,type="response")
 
-
 # Draw classification results
 tabella.sommario(pGAM>0.5,y.v)
 aGAM = lift.roc(pGAM, aLotCasualAsNumber, type="crude")
@@ -790,4 +789,79 @@ cat("press <Enter>"); readline()
 
 # Draw GAM plot
 plot(gam2,ask=TRUE)
+\end{verbatim}
+
+\subsection{nnet-classif.R}\label{sec:script-nnet-classif}
+\begin{verbatim}
+# NEURAL NETWORKS - CLASSIFICATION #
+# Load library 'nnet' and graphic tools
+library(nnet)
+library(devtools)
+source_url('https://gist.githubusercontent.com/fawda123/7471137/raw/466c1474d0a505ff044412703516c34f1a4684a5/nnet_plot_update.r')
+
+# Set formula to compute neural network
+FN = as.formula(paste("aLotCasual~",paste(names(train[-c(10:12,15)]), collapse="+")))
+parte1 = sample(1:NROW(train), 8000) 
+parte2 = setdiff(1:NROW(train), parte1)
+
+# Find best decay for neural network
+decay = 10^(seq(-3, -1, length=10))
+err = rep(0,10)
+for(k in 1:10){
+  n1 = nnet(FN, data=train[parte1,], decay=decay[k], size=5,
+            maxit=100,  trace=FALSE)
+  p1n = predict(n1, newdata=train[parte2,], type="class")
+  a = tabella.sommario(p1n, train[parte2,]$aLotCasual)
+  err[k] =  1-sum(diag(a))/sum(a)
+  print(c(err[k], decay[k]))
+}
+
+# Compute a neural network with the best decay found in previous step
+n2 = nnet(FN, data=train[parte1,], decay=min(decay), size=5,  maxit=1000)
+pNET = predict(n1, newdata=x.v, type="class")
+
+# Draw classification results
+tabella.sommario(p7,y.v)
+a7 = lift.roc(p7, aLotCasualAsNumber, type="crude")
+\end{verbatim}
+
+\subsection{nnet-classif.R}\label{sec:script-nnet-classif}
+\begin{verbatim}
+# TREE - CLASSIFICATION #
+# Load library 'tree'
+library(tree)
+
+# Convert hours to numbers
+train$datetime = as.numeric(train$datetime)
+x.v$datetime = as.numeric(x.v$datetime)
+
+# Set formula to compute neural network
+FT = as.formula(paste("aLotCasual~",paste(names(train[-c(10:12,15)]), collapse="+")))
+
+# Find whole tree
+parte1<- sample(1:NROW(train), 8000) 
+parte2<- setdiff(1:NROW(train), parte1)
+#
+t1c<- tree(FT, data=train[parte1,], control=tree.control(nobs=length(parte1), minsize=2, mindev=0.01))
+plot(t1c)
+text(t1c,cex=0.8)
+cat("press <Enter>"); readline()
+
+# Find deviance for all the subtrees of t1
+t2c<- prune.tree(t1c, newdata=train[parte2,])
+plot(t2c)
+J <- t2c$size[t2b$dev==min(t2c$dev)]
+cat("press <Enter>"); readline()
+
+# Get the tree with best size (and minimum deviance)
+t3c<-prune.tree(t1c, best=J)
+plot(t3c)
+text(t3c)
+cat("press <Enter>"); readline()
+
+# Draw classification results
+pTREEb = predict(t3c, newdata=x.v, type="class")
+tabella.sommario(pTREEb,y.v)
+pTREE <-  predict(t3c, newdata=x.v, type="vector")[,2]
+atree <- lift.roc(pTREE,aLotCasualAsNumber,type="crude")
 \end{verbatim}

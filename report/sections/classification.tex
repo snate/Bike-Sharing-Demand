@@ -186,3 +186,84 @@ agiscano per ``bilanciare'' l'effetto della temperatura.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Reti neurali}\label{sec:class-nnet}
+
+Come quarto tentativo, anche in questo caso decidiamo di utilizzare un modello
+che avevamo già utilizzato per predire la richiesta del servizio di \emph{Bike
+sharing} nelle sezioni precedenti, ovvero una rete neurale.
+
+Pure in questo caso cambia poco da quanto già detto in sezione
+\ref{sec:neural-nets}, lo script utilizzato è \texttt{nnet-classif.R} (sezione
+\ref{sec:script-nnet-classif}) e anche questo usa gli stessi strumenti visti
+nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l || c | c | }
+  \hline
+    Previsti/Osservati & 0 & 1 \\ \hline \hline
+    0 & 3884 & 186 \\ \hline
+    1 & 275 & 1098 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per rete neurale}
+\end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-nnet.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-nnet.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con rete neurale}
+  \label{fig:class-reg-1og}
+\end{figure}
+
+Come è possibile vedere dalla figura \ref{fig:nnet} (per questo modello non
+viene riportata la rete neurale finale), le reti neurali non sono facili da
+interpretare, quindi per valutarne l'efficacia utilizzeremo in seguito
+solamente le curve Lift e ROC.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Reti neurali}\label{sec:class-nnet}
+
+L'ultimo modello utilizzato è un albero di regressione.
+
+Pure in questo caso cambia poco da quanto già detto in sezione
+\ref{sec:trees}, lo script utilizzato è \texttt{tree-classif.R} (sezione
+\ref{sec:script-tree-classif}) e anche questo usa gli stessi strumenti visti
+nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l || c | c | }
+  \hline
+    Previsti/Osservati & 0 & 1 \\ \hline \hline
+    0 & 3755 & 238 \\ \hline
+    1 & 345 & 1105 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per albero di regressione}
+\end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-tree.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-tree.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con albero di regressione}
+  \label{fig:class-reg-1og}
+\end{figure}
+
+Come è possibile vedere dalla figura \ref{fig:nnet} (per questo modello non
+viene riportata la rete neurale finale), le reti neurali non sono facili da
+interpretare, quindi per valutarne l'efficacia utilizzeremo in seguito
+solamente le curve Lift e ROC.
