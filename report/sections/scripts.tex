@@ -771,3 +771,23 @@ pMARS = predict(mars2,x.v)
 tabella.sommario(pMARS>0.5, y.v)
 aMARS = lift.roc(pMARS, aLotCasualAsNumber, type="crude")
 \end{verbatim}
+
+\subsection{mars-classif.R}\label{sec:script-gam-classif}
+\begin{verbatim}
+# GAM - CLASSIFICATION #
+# Load library 'gam'
+library(gam)
+
+# Find GAM model and predict values
+gam2 =  gam(F1, family=binomial, data=x)
+pGAM = predict(gam2,newdata=x.v,type="response")
+
+
+# Draw classification results
+tabella.sommario(pGAM>0.5,y.v)
+aGAM = lift.roc(pGAM, aLotCasualAsNumber, type="crude")
+cat("press <Enter>"); readline()
+
+# Draw GAM plot
+plot(gam2,ask=TRUE)
+\end{verbatim}

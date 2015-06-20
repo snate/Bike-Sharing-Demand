@@ -116,7 +116,7 @@ nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
     0 & 3907 & 384 \\ \hline
     1 & 211 & 941 \\ \hline
 \end{tabular}
-  \caption{Tabella di errata classificazione per regressione logistica}
+  \caption{Tabella di errata classificazione per MARS}
 \end{center}
 \end{table}
 
@@ -135,3 +135,54 @@ nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
 Richiedendo il grafico delle variabili più importanti per questo modello
 (trovate con il comando \texttt{evimp}), \texttt{temp} e \texttt{workingday}
 si confermano le più importanti per questo particolare caso di studio.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{GAM}\label{sec:class-gam}
+
+Come terzo tentativo, anche in questo caso decidiamo di utilizzare un modello
+che avevamo già utilizzato per predire la richiesta del servizio di \emph{Bike sharing} nelle sezioni precedenti, ovvero GAM.
+
+Pure in questo caso cambia poco da quanto già detto in sezione \ref{sec:gam},
+lo script utilizzato è \texttt{gam-classif.R} (sezione
+\ref{sec:script-gam-classif}) e anche questo usa gli stessi strumenti visti
+nella sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l || c | c | }
+  \hline
+    Previsti/Osservati & 0 & 1 \\ \hline \hline
+    0 & 3866 & 277 \\ \hline
+    1 & 252 & 1048 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per GAM}
+\end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-gam.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-gam.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con GAM}
+  \label{fig:class-reg-1og}
+\end{figure}
+
+Come nella sezione \ref{sec:class-mars}, le variabili più significative sono
+\texttt{temp} e \texttt{workingday}.
+
+Tuttavia, dal grafico di questo modello se un giorno è lavorativo, la
+richiesta del servizio da parte di utenti non registrati cala, mentre
+all'aumentare della temperatura la richiesta cresce. \\
+Si ritiene che ciò sia dovuto al fatto che il più delle volte la temperatura è
+sufficiente da sola per determinare una richiesta alta di \emph{Bike sharing}
+da parte di qualsiasi tipo di utente e che in questo caso le altre variabili
+agiscano per ``bilanciare'' l'effetto della temperatura.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
