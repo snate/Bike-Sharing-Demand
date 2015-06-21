@@ -865,3 +865,20 @@ tabella.sommario(pTREEb,y.v)
 pTREE <-  predict(t3c, newdata=x.v, type="vector")[,2]
 atree <- lift.roc(pTREE,aLotCasualAsNumber,type="crude")
 \end{verbatim}
+
+\subsection{bagging.R}\label{sec:script-bagging}
+\begin{verbatim}
+# BAGGING #
+# Load library 'ipred' and 'rpart'
+library(ipred)
+library(rpart)
+
+# Compute best model with bagging through 25 iterations
+bag = bagging(y~.,data=x,nbagg=25, control=rpart.control(minsplit=2, cp=0, xval=0))
+pbag = predict(bag,newdata=x.v)
+
+# Draw classification results
+tabella.sommario(pbag, y.v)
+pbag.prob = predict(bag,newdata=x.v, type="prob")[,2]
+abag = lift.roc(pbag.prob, aLotCasualAsNumber, type="crude")
+\end{verbatim}
