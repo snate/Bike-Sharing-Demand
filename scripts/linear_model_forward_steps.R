@@ -4,8 +4,8 @@ best_aic = AIC(train.lm)
 for(i in 1:length(columns)) {
   if(columns[i] %in% already_present)
     next
-  myFrame = train[,c(already_present,columns[i])]
-  train.lm2 = lm(log(train$count) ~ .,data = myFrame)
+  myFrame = x[,c(already_present,columns[i])]
+  train.lm2 = lm(y ~ ., data = myFrame)
   
   aicCur = AIC(train.lm2)
   #myAnova = anova(train.lm,train.lm2)
@@ -19,8 +19,8 @@ for(i in 1:length(columns)) {
 
 if(best_aic < AIC(train.lm)) {
   already_present = c(already_present,columns[best])
-  myFrame = train[,c(already_present)]
-  train.lm = lm(log(train$count) ~ .,data = myFrame)
+  myFrame = x[,c(already_present)]
+  train.lm = lm(y ~ .,data = myFrame)
   print(paste(columns[best], "column has been added to our linear model"))
   source("scripts/linear_model_forward_steps.R")
 }

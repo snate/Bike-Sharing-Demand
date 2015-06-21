@@ -1,29 +1,42 @@
 library(boot)
-estimates = matrix(NA, nrow = MAX_P_DEGREE)
-colD = colnames(train)
+if(!is.numeric(train$datetime))
+  train$datetime = as.numeric(train$datetime)
+errors = matrix(NA, nrow = MAX_P_DEGREE)
+bestCol = "datetime"
+form_temp = paste("log(count)~",bestCol)
+numbers = sample(1:length(train$count), size = length(train$count)/2)
+str(numbers)
+numbers.other = sample(setdiff(1:length(train$count),numbers))
+str(numbers.other)
 
-plot(1:MAX_P_DEGREE,estimates,xlab = "Degrees",ylab="Error",ylim=c(1,5))
+plot(1:MAX_P_DEGREE,errors,xlab = "Degrees",ylab="Error",ylim=c(0,5))
 
 for(p in 1:MAX_P_DEGREE) {
-  d = train
-  for(i in 1:length(d)) {
-    if(colD[i] %in% columns)
-      d[i] = d[i] ^ p
-  }
+  d = train[,c("count",bestCol)]
+  d[bestCol] = d[bestCol] ** p
+  d.stima = d[numbers,]
+  d.v = d[numbers.other,]
   
-  temp = glm(formula = log(count)~season+holiday+workingday+weather+temp+atemp+
-              humidity+windspeed+season.summer+season.fall+weather.decent+
-              weather.bad,data=d,family= gaussian)
+  #temp.lm = lm(form_temp, data = d.stima)
+  #p1 = predict(object = temp.lm, newdata = d.v)
+  temp.glm = glm(form_temp, data = d.stima, family= gaussian)
+  temp = cv.glm(glmfit = temp.glm, data = d, K = 2)
   
-  temp = cv.glm(glmfit = temp,data = d, K = 2)
+  errors[p] = summary(temp.glm)$deviance
   
-  estimates[p] = temp$delta[2]
-  
-  points(p,estimates[p])
+  points(p,errors[p])
+  print(paste("Errore in ", p ,": ", errors[p]))
 }
 
+plot(1:MAX_P_DEGREE,errors,xlab = "Degrees",ylab="Error")
+
 rm(d)
-rm(i)
-rm(colD)
+rm(bestCol)
 rm(p)
-rm(temp)
+#rm(temp)
+#rm(errors)
+rm(numbers)
+rm(numbers.other)
+rm(form_temp)
+rm(d.stima)
+rm(d.v)
