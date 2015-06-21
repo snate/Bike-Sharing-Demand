@@ -13,4 +13,4 @@ pbag = predict(bag,newdata=x.v)
 tabella.sommario(pbag, y.v)
 print(42)
 pbag.prob = predict(bag,newdata=x.v, type="prob")[,2]
-abag = lift.roc(pbag.prob, aLotCasualAsNumber, type="bin")
+abag = lift.roc(pbag.prob, aLotCasualAsNumber, type="crude")
