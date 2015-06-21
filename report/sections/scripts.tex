@@ -678,8 +678,8 @@ x = x[indexes,]
 parte1 = sample(1:NROW(x),length(indexes)/2)
 parte2 = setdiff(1:NROW(x),parte1)
 
-# Create complete tree w/ deviance threshold = .02
-t1 = tree(Ftree, data= x[parte1,], control = tree.control(nobs=length(parte1),minsize=2, mindev = 0.02))  # fino alle foglie
+# Create complete tree w/ deviance threshold = .005
+t1 = tree(Ftree, data= x[parte1,], control = tree.control(nobs=length(parte1),minsize=2, mindev = 0.005))  # fino alle foglie
 plot(t1)
 text(t1)
 cat("press <Enter>"); readline()
