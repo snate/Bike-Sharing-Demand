@@ -1,0 +1,11 @@
+source("scripts/populateForClassification.R")
+source("scripts/classification/logistic-regression.R")
+source("scripts/classification/mars-classif.R")
+source("scripts/classification/gam-classif.R")
+source("scripts/classification/nnet-classif.R")
+source("scripts/classification/bagging.R")
+source("scripts/classification/boosting.R")
+source("scripts/classification/random-forests.R")
+source("scripts/classification/tree-classif.R")
+
+source("scripts/classification/plot-all-lifts.R")
