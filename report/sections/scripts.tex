@@ -825,7 +825,7 @@ tabella.sommario(p7,y.v)
 a7 = lift.roc(p7, aLotCasualAsNumber, type="crude")
 \end{verbatim}
 
-\subsection{nnet-classif.R}\label{sec:script-nnet-classif}
+\subsection{tree-classif.R}\label{sec:script-tree-classif}
 \begin{verbatim}
 # TREE - CLASSIFICATION #
 # Load library 'tree'
@@ -841,7 +841,6 @@ FT = as.formula(paste("aLotCasual~",paste(names(train[-c(10:12,15)]), collapse="
 # Find whole tree
 parte1<- sample(1:NROW(train), 8000) 
 parte2<- setdiff(1:NROW(train), parte1)
-#
 t1c<- tree(FT, data=train[parte1,], control=tree.control(nobs=length(parte1), minsize=2, mindev=0.01))
 plot(t1c)
 text(t1c,cex=0.8)
@@ -881,4 +880,25 @@ pbag = predict(bag,newdata=x.v)
 tabella.sommario(pbag, y.v)
 pbag.prob = predict(bag,newdata=x.v, type="prob")[,2]
 abag = lift.roc(pbag.prob, aLotCasualAsNumber, type="crude")
+\end{verbatim}
+
+\subsection{boosting.R}\label{sec:script-boosting}
+\begin{verbatim}
+# BOOSTING #
+# Load library 'ipred'
+library(ada)
+
+# Find model with boosting
+boosting = ada(y~., data=x, iter=50)
+
+#Draw boosting plots
+plot(boosting)
+plot(boosting, F,T)
+
+# Draw classification results
+pBoosting = predict(boosting, newdata=x.v)
+tabella.sommario(pBoosting, osserv=y.v)
+cat("press <Enter>"); readline()
+pBoosting.prob = predict(boosting, newdata=x.v, type="prob")[,2]
+aBoosting = lift.roc(pBoosting.prob, aLotCasualAsNumber, type="crude")
 \end{verbatim}
