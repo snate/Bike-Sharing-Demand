@@ -228,7 +228,7 @@ solamente le curve Lift e ROC.
 
 \subsection{Alberi di classificazione}\label{sec:class-tree}
 
-L'ultimo modello utilizzato è un albero di classificazione.
+L'ultimo modello semplice utilizzato è un albero di classificazione.
 
 Pure in questo caso cambia poco da quanto già detto in sezione
 \ref{sec:trees}, lo script utilizzato è \texttt{tree-classif.R} (sezione
@@ -387,5 +387,52 @@ sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
   \centering
   \includegraphics[width=.5\columnwidth]{images/class/boosting-plot.eps}
   \caption{Andamento dell'errore lungo le iterazioni con boosting}
+  \label{fig:final-class-tree}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Random forests}\label{sec:class-forests}
+
+Si prova ora un nuovo approccio: anzichè cambiare le unità estratte ad ogni
+iterazione, si cambiano le variabili esplicative utilizzate ad ogni iterazione.
+
+Tale metodo viene chiamato \emph{random forests}, in cui si fanno crescere
+tanti alberi di regressione (ognuno con le proprie variabili) per poi
+combinarne gli effetti facendo la media di questi.
+
+In questo caso lo script utilizzato è \texttt{random-forests.R} (sez.
+\ref{sec:script-rForests}) e anche questo usa gli stessi strumenti visti nella
+sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l || c | c | }
+  \hline
+    Previsti/Osservati & 0 & 1 \\ \hline \hline
+    0 & 3897 & 202 \\ \hline
+    1 & 252 & 1092 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per random forests}
+\end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-rForests.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-rForests.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con random forests}
+  \label{fig:class-tree}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\columnwidth]{images/class/rForests-plot.eps}
+  \caption{Andamento dell'errore con random forests}
   \label{fig:final-class-tree}
 \end{figure}
