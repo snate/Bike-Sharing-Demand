@@ -1,4 +1,4 @@
-\section{Analisi di classificazione}\label{sec:models-comparing}
+\section{Analisi di classificazione}\label{sec:class}
 
 \subsection{Un nuovo caso di studio}
 
@@ -436,3 +436,81 @@ sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
   \caption{Andamento dell'errore con random forests}
   \label{fig:final-class-tree}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Confronto tra modelli}\label{sec:class-comparing}
+
+Dopo aver calcolato tutti i modelli, è opportuno compararli affinchè si possa
+scegliere il migliore di questi.
+
+Senza confrontare le curve Lift e ROC tra di loro, possiamo asserire che le
+osservazioni rilevate nella sottosezione \ref{sec:class-tree} sono confermate
+da tutti i modelli visti in questa sezione.
+
+\paragraph{Lift} \mbox{} \\
+
+Il primo confronto è tra le curve Lift, effettuato grazie agli script
+\texttt{all-lifts.R} (sez. \ref{sec:script-all-lifts}) e
+\texttt{plot-all-lifts.R} (\ref{sec:script-plot-all-lifts}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\columnwidth]{images/class/all-lifts.eps}
+  \caption{Confronto tra curve Lift dei modelli}
+  \label{fig:all-lifts}
+\end{figure}
+
+Dalla figura è possibile vedere che tutti i modelli hanno un andamento simile
+per quanto riguarda la frazione di soggetti previsti, eccezion fatta per la
+rete neurale, che fornisce prestazioni sempre peggiori (e talvolta di molto).
+
+In particolare, i tre modelli bagging, boosting e random forests riescono ad
+avere un fattore di miglioramento decisamente più alto quando il campione ha
+una taglia ridotta (tra il 10 e il 30\% della popolazione totale). Al di fuori
+di questi intervalli, tutti i modelli hanno simile rendimento.
+
+\paragraph{ROC} \mbox{} \\
+
+Per quanto riguarda le curve ROC, è sufficiente lanciare lo script
+\texttt{plot-all-rocs.R} (\ref{sec:script-plot-all-rocs}) dopo aver eseguito
+gli script visti nel paragrafo precedente.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\columnwidth]{images/class/all-rocs.eps}
+  \caption{Confronto tra curve ROC dei modelli}
+  \label{fig:all-lifts}
+\end{figure}
+
+Come è possibile vedere dalla figura sovrastante, viene confermato quanto
+rilevato per le reti neurali osservando le curve Lift, il che ci sconsiglia di
+utilizzarle come modello per spiegare i dati.
+
+Per il resto dei modelli, le curve ROC sono molto vicine.
+
+\paragraph{Considerazioni finali} \mbox{} \\
+
+In definitiva, è possibile fare le seguenti osservazioni per il seguente caso
+di studio:
+
+\begin{itemize}
+\item Per quanto riguarda questa analisi, si consiglia di non utilizzare
+  \textbf{mai} le reti neurali per ottenere risultati;
+\item Gli alberi di regressione sono gli strumenti più facili da interpretare
+  ma forniscono prestazioni peggiori rispetto agli altri modelli;
+\item MARS non è molto semplice da interpretare e fornisce risultati medi
+  rispetto a tutti i modelli, quindi viene sconsigliato;
+\item Dei restanti, GAM e il modello lineare logistico sono i più semplici da
+  interpretare e da utilizzare ma potrebbero fornire risultati imprecisi
+  quando si prelevano campioni di taglia piccola (tra il 10 e il 30\%). \\
+  In ogni caso, da questi due modelli è possibile ricavare le osservazioni che
+  consentono di capire in modo più chiaro quali sono i motivi alla base
+  dell'utilizzo elevato di \emph{Bike sharing} da parte di utenti non
+  registrati;
+\item Se il campione fosse di taglia piccola, la scelta dovrebbe ricadere su
+  uno dei modelli tra bagging, boosting o random forests, che hanno ottenuto i
+  migliori risultati sia sulle curve Lift che ROC.
+\end{itemize}
+
