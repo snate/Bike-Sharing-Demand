@@ -1,4 +1,6 @@
-\section{Metodi non lineari}\label{sec:non-linear}
+\section{Analisi approfondita della richiesta del servizio di \emph{Bike
+sharing}}
+\label{sec:non-linear}
 
 Nella sezione \ref{sec:linear-model} sono stati introdotti ed adottati dei
 metodi di regressione lineare che fornivano dei risultati discreti in prima
@@ -264,7 +266,7 @@ variabili esplicative utilizzate nel modello.
           \includegraphics[width=\columnwidth]{images/blank.eps}
         \end{subfigure}
 
-        \caption{Grafici GAM - 2}\label{fig:gam-1}
+        \caption{Grafici GAM - 2}\label{fig:gam-2}
 \end{figure}
 
 Come è possibile vedere in queste semplici figure, vengono confermati i
@@ -447,3 +449,59 @@ Quanto si vede conferma un'ulteriore volta quanto previsto nella sezione
 \ref{sec:modlin-work-espl} e ribadito nelle seguenti sezioni, ovvero che ci si
 aspetta che il servizio sia richiesto soprattutto nelle ore di luce del
 giorno e molto meno di notte.
+
+\subsection{Confronto dei modelli}
+
+Appare ora sensato effettuare un confronto tra tutti i modelli, mostrando in
+una tabella i vari modelli e i relativi scarti quadratici sulla scala
+logaritmica:
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l | c }
+  \hline
+    Modello & RSE \\ \hline \hline
+    Modello lineare semplice & 0.659 \\ \hline
+    Splines di regressione (\texttt{datetime}) & 0.980 \\ \hline
+    Splines di regressione (\texttt{temp}) & 1.367 \\ \hline
+    MARS & 0.462 \\ \hline
+    GAM & 1.087 \\ \hline
+    PPR & 0.562 \\ \hline
+    Rete neurale & 1.344 \\ \hline
+    CART & 0.445 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per regressione logistica}
+\end{center}
+\end{table}
+
+Dall'analisi degli errori, i modelli che emergono come migliori sembrano MARS,
+PPR e CART.
+
+È doveroso notare che per diminuire l'errore in un albero di regressione è
+sufficiente aumentare la dimensione dell'albero, procedura che ne compromette
+la leggibilità.
+Nel nostro caso l'albero però si ritiene interpretabile ed ha anche il miglior
+RSE, quindi per fornire delle previsioni potremmo:
+\begin{enumerate}
+\item affidarci al CART in prima battuta;
+\item verificare i risultati con MARS e PPR, ovvero i modelli con minor
+  facilità di interpretazione ma che si sono rivelati efficaci in questo caso
+  di studio.
+\end{enumerate}
+
+Per quanto riguarda gli altri modelli, il modello lineare semplice ha un
+errore relativamente buono, che permette di fare affidamento sui suoi
+risultati: ciò ci permette di capire perchè gli errori delle splines di
+regressione non sono bassi, dal momento che sia \texttt{datetime} che
+\texttt{temp} sono due fattori critici per la richiesta del servizio di
+\emph{Bike sharing}.
+
+Per quanto riguarda GAM, i risultati derivanti da esso (facilmente leggibili
+nei grafici presenti nelle figure \ref{fig:gam-1} e \ref{fig:gam-2}) sono
+coerenti con quanto osservato dagli altri modelli, ma come è visibile nella
+tabella sovrastante il modello è impreciso.
+
+Infine, la rete neurale ottenuta, sebbene coinvolga tutte le variabili, non
+solo è più difficile da interpretare ma fornisce anche risultati poco precisi,
+quindi possiamo tranquillamente escluderla dai modelli che utilizzeremmo per
+prevedere le risposte con nuovi dati.
