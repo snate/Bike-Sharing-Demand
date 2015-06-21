@@ -290,3 +290,53 @@ relazioni evidenziate nelle precedenti sottosezioni di questa sezione:
   14,35$^{\circ}$C le condizioni atmosferiche sono comunque maggiormente
   ostiche in confronto a quelle del sottoalbero destro.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Bagging}\label{sec:class-bagging}
+
+Si passa dunque a tecniche che cercano di ottenere il miglior risultato da
+iterazioni in cui si tenta di applicare più volte uno stesso modello per il
+nostro dataset.
+
+Il primo tentativo, chiamato \emph{bagging}, si basa sul fatto di prelevare
+casualmente parte del training set, che verrà utilizzata per trovare un CART.
+Al termine del calcolo di questo, le unità verranno reinserite e potrebbero
+essere estratte nuovamente dall'iterazione successiva in poi (tale metodo si
+chiama \emph{bootstrap}).
+
+Per trovare il modello finale, si assegna ad ogni classificatore la classe che
+è stata prevista il maggior numero di volte per questo. Non verrà utilizzato il
+\emph{bumping} per il nostro dataset poichè veramente simile al \emph{bagging},
+con la differenza che non viene utilizzato un ``voto di maggioranza'' ma il
+modello con minor errore viene eletto direttamente (\emph{bumps}) come modello
+da utilizzare, ignorando gli altri.
+
+In questo caso lo script utilizzato è \texttt{bagging.R} (sez.
+\ref{sec:script-bagging}) e anche questo usa gli stessi strumenti visti nella
+sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l || c | c | }
+  \hline
+    Previsti/Osservati & 0 & 1 \\ \hline \hline
+    0 & 3930 & 249 \\ \hline
+    1 & 243 & 1021 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per bagging}
+\end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-bagging.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-bagging.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con bagging}
+  \label{fig:class-tree}
+\end{figure}
