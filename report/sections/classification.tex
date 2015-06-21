@@ -1,4 +1,4 @@
-\section{Confronto tra modelli}\label{sec:models-comparing}
+\section{Analisi di classificazione}\label{sec:models-comparing}
 
 \subsection{Un nuovo caso di studio}
 
@@ -339,4 +339,53 @@ sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
   \end{subfigure}
   \caption{Curve per classificazione con bagging}
   \label{fig:class-tree}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Boosting}\label{sec:class-boosting}
+
+Un metodo che assomiglia al bagging ma che differisce da questo per alcune
+particolarità è il boosting.
+
+A differenza del bagging, i campioni hanno probabilità diverse di essere
+estratte ad ogni iterazione. Allo stesso modo, il modello finale viene ottenuto
+da una somma pesata dei modelli calcolati ad ogni iterazione.\footnote{N.B.
+chiaramente è insensato far crescere l'albero fino a tutte le sue foglie,
+poichè si incorrerebbe in sovradattamento}
+
+In questo caso lo script utilizzato è \texttt{boosting.R} (sez.
+\ref{sec:script-boosting}) e anche questo usa gli stessi strumenti visti nella
+sezione \ref{sec:class-log-reg} per valutare la classificazione ottenuta.
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l || c | c | }
+  \hline
+    Previsti/Osservati & 0 & 1 \\ \hline \hline
+    0 & 3897 & 221 \\ \hline
+    1 & 229 & 1096 \\ \hline
+\end{tabular}
+  \caption{Tabella di errata classificazione per boosting}
+\end{center}
+\end{table}
+
+\begin{figure}[H]
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/lift-boosting.eps}
+  \end{subfigure}
+  \hspace*{\fill}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\columnwidth]{images/class/roc-boosting.eps}
+  \end{subfigure}
+  \caption{Curve per classificazione con boosting}
+  \label{fig:class-tree}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\columnwidth]{images/class/boosting-plot.eps}
+  \caption{Andamento dell'errore lungo le iterazioni con boosting}
+  \label{fig:final-class-tree}
 \end{figure}
