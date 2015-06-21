@@ -821,8 +821,8 @@ n2 = nnet(FN, data=train[parte1,], decay=min(decay), size=5,  maxit=1000)
 pNET = predict(n1, newdata=x.v, type="class")
 
 # Draw classification results
-tabella.sommario(p7,y.v)
-a7 = lift.roc(p7, aLotCasualAsNumber, type="crude")
+tabella.sommario(pNET,y.v)
+aNET = lift.roc(pNET, aLotCasualAsNumber, type="crude")
 \end{verbatim}
 
 \subsection{tree-classif.R}\label{sec:script-tree-classif}
@@ -849,7 +849,7 @@ cat("press <Enter>"); readline()
 # Find deviance for all the subtrees of t1
 t2c<- prune.tree(t1c, newdata=train[parte2,])
 plot(t2c)
-J <- t2c$size[t2b$dev==min(t2c$dev)]
+J <- t2c$size[t2c$dev==min(t2c$dev)]
 cat("press <Enter>"); readline()
 
 # Get the tree with best size (and minimum deviance)
@@ -921,4 +921,68 @@ pRF.prob = predict(rForest, newdata=x.v, type="prob")[,2]
 tabella.sommario(pRF, osserv=y.v)
 cat("press <Enter>"); readline()
 a21 = lift.roc(pRF.prob, aLotCasualAsNumber, type="crude")
+\end{verbatim}
+
+\subsection{all-lifts.R}\label{sec:script-all-lifts}
+\begin{verbatim}
+# PLOT ALL LIFTS AFTER COMPUTING 'EM #
+# Populate for classification
+source("scripts/populateForClassification.R")
+
+# Compute all models
+source("scripts/classification/logistic-regression.R")
+source("scripts/classification/mars-classif.R")
+source("scripts/classification/gam-classif.R")
+source("scripts/classification/nnet-classif.R")
+source("scripts/classification/bagging.R")
+source("scripts/classification/boosting.R")
+source("scripts/classification/random-forests.R")
+source("scripts/classification/tree-classif.R")
+
+# Call the procedure that plots all lifts
+source("scripts/classification/plot-all-lifts.R")
+\end{verbatim}
+
+\subsection{plot-all-lifts.R}\label{sec:script-plot-all-lifts}
+\begin{verbatim}
+# PLOT ALL LIFTS #
+# Plot all lift lines
+plot(aLogistic[[1]], aLogistic[[2]], type="b", 
+     cex=0.75, col=1, pch=1,
+     xlab="Frazione di soggetti previsti", ylab="Fattore di miglioramento",
+     xlim=c(0,1), ylim=c(1,5))
+lines(aRF[[1]], aRF[[2]], type="b", cex=0.75, col=9, lty=9, pch=11)
+lines(aMARS[[1]], aMARS[[2]], type="b", cex=0.75, col=2, lty=2, pch=2)
+lines(aGAM[[1]], aGAM[[2]], type="b", cex=0.75, col=3, lty=3, pch=3)
+lines(aNET[[1]], aNET[[2]], type="b", cex=0.75, col=4, lty=4, pch=4)
+lines(atree[[1]], atree[[2]], type="b", cex=0.75, col=5, lty=5, pch=5)
+lines(abag[[1]], abag[[2]], type="b", cex=0.75, col=6, lty=6, pch=6)
+lines(aBoosting[[1]], aBoosting[[2]], type="b", cex=0.75, col=8, lty=8, pch=8)
+
+# Write legend
+legend(0.7,5,c("Modello logistico","MARS","GAM","Rete neurale","CART","Bagging","Boosting","Random forests"),
+       col=c(1,2,3,4,5,6,8,9),
+       lty=c(1,2,3,4,5,6,8,9),
+       pch=c(1,2,3,4,5,6,8,11))
+\end{verbatim}
+
+\subsection{plot-all-rocs.R}\label{sec:script-plot-all-rocs}
+\begin{verbatim}
+# Plot all ROC lines #
+plot(aLogistic[[3]], aLogistic[[4]], type="b", 
+     cex=0.75, col=1, pch=1,
+     xlab="1-specificità", ylab="sensibilità",
+     xlim=c(0,1), ylim=c(0,1))
+lines(aRF[[3]], aRF[[4]], type="b", cex=0.75, col=9, lty=9, pch=11)
+lines(aMARS[[3]], aMARS[[4]], type="b", cex=0.75, col=2, lty=2, pch=2)
+lines(aGAM[[3]], aGAM[[4]], type="b", cex=0.75, col=3, lty=3, pch=3)
+lines(aNET[[3]], aNET[[4]], type="b", cex=0.75, col=4, lty=4, pch=4)
+lines(atree[[3]], atree[[4]], type="b", cex=0.75, col=5, lty=5, pch=5)
+lines(abag[[3]], abag[[4]], type="b", cex=0.75, col=6, lty=6, pch=6)
+lines(aBoosting[[3]], aBoosting[[4]], type="b", cex=0.75, col=8, lty=8, pch=8)
+
+legend(0.7,0.7,c("Modello logistico","MARS","GAM","Rete neurale","CART","Bagging","Boosting","Random forests"),
+       col=c(1,2,3,4,5,6,8,9),
+       lty=c(1,2,3,4,5,6,8,9),
+       pch=c(1,2,3,4,5,6,8,11))
 \end{verbatim}
